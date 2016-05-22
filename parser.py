@@ -14,14 +14,12 @@ grammar = Grammar(r"""
 program:   _ box* !/./.
 
 box:       name '{'_ stmt* '}'_                    :Box.
-stmt:      decl | action | equation.
 
-decl:      /var\b/_ name (','_ name)* ';'_         :Decl.
+stmt:      /var\b/_ name (','_ name)* ';'_         :Decl
+         | /conn\b/_ expr (/to\b/_ expr)+ ';'_     :Conn
+         | /put\b/_ [(name ':'_)? :Maybe] box ';'_ :Put
+         | expr (equ expr)+ ';'_                   :Equation.
 
-action:    /conn\b/_ expr (/to\b/_ expr)+ ';'_     :Conn
-         | /put\b/_ [(name ':'_)? :Maybe] box ';'_ :Put.
-
-equation:  expr (equ expr)+ ';'_                   :Equation.
 equ:       '='_ :Equate
          | '~'_ :Default.
 
