@@ -2,7 +2,7 @@
 Parse (our subset of) IDEAL.
 """
 
-from parson import Grammar, join
+from parson import Grammar
 from absyntax import (Box, Decl, Equation, Equate, Default, Conn, Put,
                       Add, Sub, Mul, Div, Ref, Of, Literal,)
 
@@ -33,11 +33,11 @@ atom:      '('_ number ','_ number ')'_            :complex :Literal
          | '('_ expr ')'_
          | name :Ref ('.'_ name :Of)*.
 
-number:    int (frac exp? | exp)? _                :join :float.
-int      = /(-?0)/ !/\d/
-         | /(-?[1-9]\d*)/.
-frac     = /([.]\d+)/.
-exp      = /([eE][+-]?\d+)/.
+number:    { /-?/ uint (frac exp? | exp)? } _      :float.
+uint     = /0/ !/\d/
+         | /[1-9]\d*/.
+frac     = /[.]\d+/.
+exp      = /[eE][+-]?\d+/.
 
 name     = /([A-Za-z_][A-Za-z_0-9]*)/ _.
 
