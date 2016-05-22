@@ -6,35 +6,20 @@ from structs import Struct
 
 Box = Struct('box', 'name stmts')
 
-def Decl(names):
-    return 'decl', names
+Decl = Struct('decl', 'names')
 
-def Conn(points):
-    return 'conn', points
+Conn = Struct('conn', 'points')
+Put = Struct('put', 'opt_name, box')
 
-def Equate(parts):  return '=', parts
-def Default(parts): return '~', parts
+Equate = Struct('=', 'parts')
+Default = Struct('~', 'parts')
 
-def Put(opt_name, box):
-    return 'put', opt_name, box
+Add = Struct('+', 'arg1, arg2')
+Sub = Struct('-', 'arg1, arg2')
+Mul = Struct('*', 'arg1, arg2')
+Div = Struct('/', 'arg1, arg2')
 
-def Add(arg1, arg2):
-    return '+', arg1, arg2
+Ref = Struct('ref', 'name')
+Of = Struct('of', 'ref, field')
 
-def Sub(arg1, arg2):
-    return '-', arg1, arg2
-
-def Mul(arg1, arg2):
-    return '*', arg1, arg2
-
-def Div(arg1, arg2):
-    return '/', arg1, arg2
-
-def Ref(name):
-    return 'ref', name
-
-def Of(ref, field):
-    return 'of', ref, field
-
-def Literal(n):
-    return 'literal', n
+Literal = Struct('literal', 'n')
