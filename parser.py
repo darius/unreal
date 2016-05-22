@@ -2,26 +2,24 @@
 Parse (our subset of) IDEAL.
 """
 
-from parson import Grammar
-from absyntax import (Box, Decl, Equation, Equate, Default, Conn, Put,
+from parson import Grammar, hug
+from absyntax import (Box, Decl, Equate, Default, Conn, Put,
                       Add, Sub, Mul, Div, Ref, Of, Literal,)
 
-def Maybe(*args):
+def maybe(*args):
     assert len(args) <= 1
     return args[0] if args else None
 
 grammar = Grammar(r"""
 program:   _ box* !/./.
 
-box:       name '{'_ stmt* '}'_                    :Box.
+box:       name '{'_ [stmt* :hug] '}'_             :Box.
 
-stmt:      /var\b/_ name (','_ name)* ';'_         :Decl
-         | /conn\b/_ expr (/to\b/_ expr)+ ';'_     :Conn
-         | /put\b/_ [(name ':'_)? :Maybe] box ';'_ :Put
-         | expr (equ expr)+ ';'_                   :Equation.
-
-equ:       '='_ :Equate
-         | '~'_ :Default.
+stmt:      /var\b/_ name (','_ name)* ';'_         :hug :Decl
+         | /conn\b/_ expr (/to\b/_ expr)+ ';'_     :hug :Conn
+         | /put\b/_ [(name ':'_)? :maybe] box ';'_ :Put
+         | expr ('='_ expr)+ ';'_                  :hug :Equate 
+         | expr ('~'_ expr)+ ';'_                  :hug :Default.
 
 expr:      term ( '+'_ term :Add
                 | '-'_ term :Sub )*.
@@ -85,15 +83,15 @@ main {
 }
 """
 ## from pprint import pprint
-## for a in parser.program(eg): pprint(a)
+## for a in parser.program(eg): pprint(a.as_sexpr())
 #. ('box',
 #.  'rect',
 #.  (('decl', ('ne', 'nw', 'se', 'sw', 'wd', 'ht')),
-#.   ('equation',
-#.    ('ref', 'nw'),
-#.    ('=', ('+', ('ref', 'sw'), ('*', ('literal', 1j), ('ref', 'ht'))))),
-#.   ('equation', ('ref', 'ne'), ('=', ('+', ('ref', 'nw'), ('ref', 'wd')))),
-#.   ('equation', ('ref', 'se'), ('=', ('+', ('ref', 'sw'), ('ref', 'wd')))),
+#.   ('=',
+#.    (('ref', 'nw'),
+#.     ('+', ('ref', 'sw'), ('*', ('literal', 1j), ('ref', 'ht'))))),
+#.   ('=', (('ref', 'ne'), ('+', ('ref', 'nw'), ('ref', 'wd')))),
+#.   ('=', (('ref', 'se'), ('+', ('ref', 'sw'), ('ref', 'wd')))),
 #.   ('conn',
 #.    (('ref', 'ne'),
 #.     ('ref', 'nw'),
@@ -110,33 +108,29 @@ main {
 #.    'first',
 #.    ('box',
 #.     'rect',
-#.     (('equation', ('ref', 'sw'), ('=', ('literal', 0j))),
-#.      ('equation',
-#.       ('ref', 'ht'),
-#.       ('=', ('ref', 'wd'), '=', ('literal', (1+0j))))))),
+#.     (('=', (('ref', 'sw'), ('literal', 0j))),
+#.      ('=', (('ref', 'ht'), ('ref', 'wd'), ('literal', (1+0j))))))),
 #.   ('put',
 #.    'next',
 #.    ('box',
 #.     'rect',
-#.     (('equation', ('ref', 'nw'), ('=', ('of', ('ref', 'first'), 'se'))),
-#.      ('equation',
-#.       ('ref', 'ht'),
-#.       ('=', ('ref', 'wd'), '=', ('of', ('ref', 'first'), 'ht')))))),
+#.     (('=', (('ref', 'nw'), ('of', ('ref', 'first'), 'se'))),
+#.      ('=', (('ref', 'ht'), ('ref', 'wd'), ('of', ('ref', 'first'), 'ht')))))),
 #.   ('put',
 #.    'last',
 #.    ('box',
 #.     'rect',
-#.     (('equation', ('ref', 'sw'), ('=', ('of', ('ref', 'first'), 'ne'))),
-#.      ('equation', ('ref', 'se'), ('=', ('of', ('ref', 'next'), 'ne'))),
-#.      ('equation', ('ref', 'ht'), ('=', ('ref', 'wd'))))))))
+#.     (('=', (('ref', 'sw'), ('of', ('ref', 'first'), 'ne'))),
+#.      ('=', (('ref', 'se'), ('of', ('ref', 'next'), 'ne'))),
+#.      ('=', (('ref', 'ht'), ('ref', 'wd'))))))))
 #. ('box',
 #.  'main',
 #.  (('put',
 #.    None,
 #.    ('box',
 #.     'rect',
-#.     (('equation',
-#.       ('/', ('+', ('ref', 'nw'), ('ref', 'sw')), ('literal', (2+0j))),
-#.       ('=', ('literal', 1j))),
-#.      ('equation', ('ref', 'nw'), ('=', ('literal', 2j))),
-#.      ('equation', ('ref', 'wd'), ('=', ('literal', (1+0j))))))),))
+#.     (('=',
+#.       (('/', ('+', ('ref', 'nw'), ('ref', 'sw')), ('literal', (2+0j))),
+#.        ('literal', 1j))),
+#.      ('=', (('ref', 'nw'), ('literal', 2j))),
+#.      ('=', (('ref', 'wd'), ('literal', (1+0j))))))),))

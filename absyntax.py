@@ -2,20 +2,18 @@
 Abstract syntax for IDEAL.
 """
 
-def Box(name, *stmts):
-    return 'box', name, stmts
+from structs import Struct
 
-def Decl(*names):
+Box = Struct('box', 'name stmts')
+
+def Decl(names):
     return 'decl', names
 
-def Equation(lhs, *parts):
-    return 'equation', lhs, parts
-
-def Equate():  return '='
-def Default(): return '~'
-
-def Conn(*points):
+def Conn(points):
     return 'conn', points
+
+def Equate(parts):  return '=', parts
+def Default(parts): return '~', parts
 
 def Put(opt_name, box):
     return 'put', opt_name, box
