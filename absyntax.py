@@ -22,4 +22,4 @@ Div = Struct('/', 'arg1 arg2')
 Ref = Struct('ref', 'name')
 Of = Struct('of', 'ref field')
 
-Literal = Struct('literal', 'n')
+Literal = Struct('literal', 'value')
