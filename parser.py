@@ -15,11 +15,13 @@ program:   _ box* !/./.
 
 box:       name '{'_ [stmt* :hug] '}'_             :Box.
 
-stmt:      /var\b/_ name (','_ name)* ';'_         :hug :Decl
-         | /conn\b/_ expr (/to\b/_ expr)+ ';'_     :hug :Conn
-         | /put\b/_ [(name ':'_)? :maybe] box ';'_ :Put
+stmt:      'var'__ name (','_ name)* ';'_          :hug :Decl
+         | 'conn'__ expr ('to'__ expr)+ ';'_       :hug :Conn
+         | 'put'__ [(name ':'_)? :maybe] box ';'_  :Put
          | expr ('='_ expr)+ ';'_                  :hug :Equate 
          | expr ('~'_ expr)+ ';'_                  :hug :Default.
+
+__ = /\b/_.   # (i.e. a keyword must match up to a word boundary)
 
 expr:      term ( '+'_ term :Add
                 | '-'_ term :Sub )*.
