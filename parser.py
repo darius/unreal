@@ -3,8 +3,7 @@ Parse (our subset of) IDEAL.
 """
 
 from parson import Grammar
-from absyntax import (Box, Decl, Equate, Default, Conn, Put,
-                      Add, Sub, Mul, Div, Ref, Of, Literal,)
+import absyntax
 
 grammar = Grammar(r"""
 program:   _ box* !/./.
@@ -40,7 +39,7 @@ name     = /([A-Za-z_][A-Za-z_0-9]*)/ _.
 _        = (/\s+/ | comment)*.
 comment  = '/*' (!'*/' /.|\n/)* '*/'.
 """)
-parser = grammar(**globals())
+parser = grammar(**absyntax.__dict__)
 
 
 eg = """
