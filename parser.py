@@ -6,18 +6,14 @@ from parson import Grammar
 from absyntax import (Box, Decl, Equate, Default, Conn, Put,
                       Add, Sub, Mul, Div, Ref, Of, Literal,)
 
-def maybe(*args):
-    assert len(args) <= 1
-    return args[0] if args else None
-
 grammar = Grammar(r"""
 program:   _ box* !/./.
 
-box:       name '{'_ [stmt* :hug] '}'_             :Box.
+box:       name '{'_ [stmt* :hug] '}'_                  :Box.
 
 stmt:      'var'__ name (','_ name)* ';'_          :hug :Decl
          | 'conn'__ expr ('to'__ expr)+ ';'_       :hug :Conn
-         | 'put'__ [(name ':'_)? :maybe] box ';'_  :Put
+         | 'put'__ [name ':'_ | :None] box ';'_         :Put
          | expr ('='_ expr)+ ';'_                  :hug :Equate 
          | expr ('~'_ expr)+ ';'_                  :hug :Default.
 
