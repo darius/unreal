@@ -28,10 +28,10 @@ atom:      '('_ number ','_ number ')'_            :complex :Literal
          | '('_ expr ')'_
          | name :Ref ('.'_ name :Of)*.
 
-number:    { /-?/ uint (frac exp? | exp)? } _      :float.
-uint     = /0/ !/\d/
+number:    { '-'? uint (frac exp? | exp)? } _      :float.
+uint     = '0' !/\d/
          | /[1-9]\d*/.
-frac     = /[.]\d+/.
+frac     = '.' /\d+/.
 exp      = /[eE][+-]?\d+/.
 
 name     = /([A-Za-z_][A-Za-z_0-9]*)/ _.
