@@ -2,7 +2,7 @@
 Parse (our subset of) IDEAL.
 """
 
-from parson import Grammar, hug
+from parson import Grammar
 from absyntax import (Box, Decl, Equate, Default, Conn, Put,
                       Add, Sub, Mul, Div, Ref, Of, Literal,)
 
