@@ -6,17 +6,17 @@ import sys
 import interpreter, parser
 
 def main(argv):
-    defs = []
-    for filename in argv[1:]:
-        with open(filename) as f:
-            text = f.read()
-        try:
-            defs.extend(parser.parse(text))
-        except parser.Unparsable as e:
-            syntax_error(e, filename)
-            return 1
+    defs = sum(map(load, argv[1:]), ())
     interpreter.run(defs)
-    return 0
+
+def load(filename):
+    with open(filename) as f:
+        text = f.read()
+    try:
+        return parser.parse(text)
+    except parser.Unparsable as e:
+        syntax_error(e, filename)
+        sys.exit(1)
 
 def syntax_error(e, filename):
     line_no, prefix, suffix = where(e)
@@ -38,4 +38,4 @@ def sanitize(s):
                    for c in s)
 
 if __name__ == '__main__':
-    sys.exit(main(sys.argv))
+    main(sys.argv)
