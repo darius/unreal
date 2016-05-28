@@ -13,9 +13,9 @@ box:       name '{'_ [stmt* :hug] '}'_                  :Box.
 stmt:      'var'__ name (','_ name)* ';'_          :hug :Decl
          | 'conn'__ expr ('to'__ expr)+ ';'_       :hug :Conn
          | 'put'__ [name ':'_ | :None] box ';'_         :Put
+         | {'left'|'right'|}__ string 'at'__ expr ';'_  :Text
          | expr ('='_ expr)+ ';'_                  :hug :Equate 
-         | expr ('~'_ expr)+ ';'_                  :hug :Default
-         | {'left'|'right'|}__ string 'at'__ expr ';'_  :Text.
+         | expr ('~'_ expr)+ ';'_                  :hug :Default.
 
 __ = /\b/_.   # (i.e. a keyword must match up to a word boundary)
 
