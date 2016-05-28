@@ -21,8 +21,10 @@ __ = /\b/_.   # (i.e. a keyword must match up to a word boundary)
 
 expr:      term ( '+'_ term :Add
                 | '-'_ term :Sub )*.
-term:      atom ( '*'_ atom :Mul
-                | '/'_ atom :Div )*.
+term:      factor ( '*'_ factor :Mul
+                  | '/'_ factor :Div )*.
+
+factor:    atom ('['_ expr ','_ expr ']'_ :Interpolate)*.
 
 atom:      '('_ number ','_ number ')'_            :complex :Literal
          | number                                  :complex :Literal

@@ -86,3 +86,10 @@ class Add(BinaryOp): operate = operator.add
 class Sub(BinaryOp): operate = operator.sub
 class Mul(BinaryOp): operate = operator.mul
 class Div(BinaryOp): operate = operator.truediv
+
+class Interpolate(Struct('alpha zero one')):
+    def evaluate(self, env):
+        alpha = self.alpha.evaluate(env)
+        zero = self.zero.evaluate(env)
+        one = self.one.evaluate(env)
+        return zero + (one - zero) * alpha;
