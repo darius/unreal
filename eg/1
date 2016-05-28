@@ -1,0 +1,16 @@
+rect {
+    var ne, nw, sw, se, c, ht, wd;
+    ne = se + (0,1)*ht;
+    nw = sw + (0,1)*ht;
+    ne = nw + wd;
+    c = (ne + sw)/2;
+    conn ne to nw to sw to se to ne;
+}
+
+main {
+    put rect {
+        ht = 2;
+        wd = 1;
+        sw = 0;
+    };
+}

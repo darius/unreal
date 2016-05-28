@@ -1,0 +1,11 @@
+triangle {
+    var z1, z2, z3;
+    conn z1 to z2 to z3 to z1;
+}
+main {
+    put triangle {
+        z1 = 0;
+        z2 = 1;
+        z3 = (0,1);
+    };
+}

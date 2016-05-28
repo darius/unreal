@@ -1,0 +1,17 @@
+rect {
+    var ne, nw, sw, se, c, ht, wd;
+    ne = se + (0,1)*ht;
+    nw = sw + (0,1)*ht;
+    ne = nw + wd;
+    c = (1/2)[ne, sw];
+    conn ne to nw to sw to se to ne;
+    left "I am a rect" at (ne+se)/2;
+}
+
+main {
+    put rect {
+        ne = (1,2);
+        sw = 0;
+        wd = 0.5*ht;
+    };
+}

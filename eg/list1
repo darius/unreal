@@ -1,0 +1,56 @@
+main {
+    var lht, lwd;
+    lht = 1;
+    lwd = 2;
+
+    put first: listnode {
+        sw = 0;
+    };
+/******************
+    put last: listnode {
+        sw = 2[first.sw, first.se];
+        conn s to ne;
+    };
+    put new: listnode {
+        nw = 2[first.ne, first.se];
+    };
+
+    put arrow {
+        hd = last.w;
+        tl = first.next;
+    };
+    put arrow {
+        hd = new.w;
+        tl = hd - 1;
+        right "new " at tl;
+    };
+    put arrow {
+        hd = first.w;
+        tl = hd - 1;
+        right "list " at tl;
+    };
+*********************/
+}
+
+listnode {  /* XXX why not inherit from rect, plus a line down the middle? */
+    var n, s, e, w, ne, nw, se, sw, next;
+    n = s + (0,1)*lht;   /* N.B. lht, lwd are free */
+    ne = n + 0.5*lwd = nw + lwd;
+    se = s + 0.5*lwd = sw + lwd;
+    e = (ne + se)/2;
+    w = (nw + sw)/2;
+    next = (ne + s)/2;
+    conn nw to ne to se to sw to nw;
+    conn n to s;
+}
+
+arrow {
+    var tl, hd, perp;
+    conn tl to hd;
+  /* XXX to do
+    perp = 0.2*unit(tl-hd);
+    conn hd + cis(25)*perp
+         to hd
+         to hd + cis(-25)*perp;
+   */
+}
