@@ -7,6 +7,7 @@ import operator
 
 from structs import Struct
 import linear_constraints as LC
+import linear_equations as LE
 
 class Environment(Struct('types drawers things')):
     def spawn(self, things):
@@ -31,7 +32,8 @@ class Box(Struct('name stmts')):
 class Decl(Struct('names')):
     def run(self, env):
         for name in self.names:
-            env.things[name] = LC.Number()
+            lin_exp = LE.LinExp(0, [(LC.Variable(name), 1)])
+            env.things[name] = LC.Number(lin_exp)
 
 class Conn(Struct('points')):
     def run(self, env):
@@ -66,7 +68,7 @@ class Of(Struct('ref field')):
 
 class Literal(Struct('value')):
     def evaluate(self, env):
-        return self.value
+        return LC.Number(LE.LinExp(self.value, ()))
 
 class BinaryOp(Struct('arg1 arg2')):
     def evaluate(self, env):
