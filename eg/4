@@ -1,0 +1,8 @@
+/* Rotated rect */
+main {
+    put rect {
+        sw = 0;
+        wd = (1,1);
+        ht = 2*wd;
+    };
+}

@@ -1,3 +1,4 @@
+/* Parallelogram */
 main {
     put rect {
         ht = 1;
