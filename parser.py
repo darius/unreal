@@ -14,7 +14,8 @@ stmt:      'var'__ name (','_ name)* ';'_          :hug :Decl
          | 'conn'__ expr ('to'__ expr)+ ';'_       :hug :Conn
          | 'put'__ [name ':'_ | :None] box ';'_         :Put
          | expr ('='_ expr)+ ';'_                  :hug :Equate 
-         | expr ('~'_ expr)+ ';'_                  :hug :Default.
+         | expr ('~'_ expr)+ ';'_                  :hug :Default
+         | {'left'|'right'|}__ string 'at'__ expr ';'_  :Text.
 
 __ = /\b/_.   # (i.e. a keyword must match up to a word boundary)
 
@@ -33,6 +34,8 @@ uint     = '0' !/\d/
          | /[1-9]\d*/.
 frac     = '.' /\d+/.
 exp      = /[eE][+-]?\d+/.
+
+string   = '"' {/[^\\"]*/} '"' _.
 
 name     = /([A-Za-z_][A-Za-z_0-9]*)/ _.
 

@@ -41,6 +41,13 @@ class Conn(Struct('points')):
     def draw(self, env):
         print 'conn', [p.evaluate(env).get_value() for p in self.points]
 
+class Text(Struct('justified string where')):
+    def run(self, env):
+        env.drawers.append((self, env))
+    def draw(self, env):
+        at = self.where.evaluate(env).get_value()
+        print 'text', self.justified, 'at', at, repr(self.string)
+
 class Put(Struct('opt_name box')):
     def run(self, env):
         name = self.opt_name or gensym()
