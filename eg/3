@@ -1,0 +1,7 @@
+main {
+    put rect {
+        ht = 1;
+        wd = (1,1);
+        sw = 0;
+    };
+}
