@@ -6,6 +6,7 @@ from itertools import count
 import operator
 
 from structs import Struct
+import linear_constraints as LC
 
 class Environment(Struct('types drawers things')):
     def spawn(self, things):
@@ -22,8 +23,6 @@ counter = count(1)
 def gensym():
     return 'g#%d' % next(counter)
 
-Variable = Struct('name value', name='Variable')
-
 class Box(Struct('name stmts')):
     def make(self, env):
         for stmt in self.stmts:
@@ -32,13 +31,13 @@ class Box(Struct('name stmts')):
 class Decl(Struct('names')):
     def run(self, env):
         for name in self.names:
-            env.things[name] = Variable(name, None)
+            env.things[name] = LC.Number()
 
 class Conn(Struct('points')):
     def run(self, env):
         env.drawers.append((self, env))
     def draw(self, env):
-        print 'conn', [p.evaluate(env) for p in self.points]
+        print 'conn', [p.evaluate(env).get_value() for p in self.points]
 
 class Put(Struct('opt_name box')):
     def run(self, env):
@@ -48,17 +47,13 @@ class Put(Struct('opt_name box')):
         for stmt in self.box.stmts:
             stmt.run(subenv)
 
-isa = isinstance
-
 class Default(Struct('parts')): pass # XXX
 
 class Equate(Struct('parts')):
     def run(self, env):
         lhs = self.parts[0]
         for rhs in self.parts[1:]:
-            assert isa(lhs, Ref)        # for now
-            assert env.things[lhs.name].value is None
-            env.things[lhs.name] = rhs.evaluate(env)
+            LC.equate(lhs.evaluate(env), rhs.evaluate(env))
             lhs = rhs
 
 class Ref(Struct('name')):
