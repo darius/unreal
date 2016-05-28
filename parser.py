@@ -2,7 +2,7 @@
 Parse (our subset of) IDEAL.
 """
 
-from parson import Grammar
+from parson import Grammar, Unparsable
 import interpreter
 
 grammar = Grammar(r"""
@@ -40,3 +40,4 @@ _        = (/\s+/ | comment)*.
 comment  = '/*' (!'*/' /.|\n/)* '*/'.
 """)
 parser = grammar(**interpreter.__dict__)
+parse = parser.program

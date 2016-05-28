@@ -13,7 +13,7 @@ class Environment(Struct('types drawers things')):
     def spawn(self, things):
         return Environment(self.types, self.drawers, things)
 
-def start(defs):
+def run(defs):
     env = Environment({box.name: box for box in defs}, [], {})
     env.types['main'].make(env)
     for drawer, subenv in env.drawers:
