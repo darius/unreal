@@ -8,3 +8,8 @@ The full language is explained in the [IDEAL User's
 Manual](https://web.cecs.pdx.edu/~trent/gnu/groff/103.ps).
 
 This uses [Parson](https://github.com/darius/parson) for parsing.
+
+Other interpreters I know of (and so far have only glanced at):
+
+  * [Original IDEAL](http://freaknet.org/martin/tape/stuff/ditroff/ideal/)
+  * [Argand](https://github.com/ALPHA-60/argand)
