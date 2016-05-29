@@ -4,6 +4,11 @@ Output SVG.
 
 import xml.dom.minidom as dom
 
+# (I tried using SVG transforms to work within the source coordinate
+# system (right handed, original scale), but gave up because then text
+# gets mirror reflected and grossly enlarged. The viewBox does let us
+# shift the origin.)
+
 def begin():
     print """\
 <svg version="1.1" baseProfile="full" xmlns="http://www.w3.org/2000/svg"
