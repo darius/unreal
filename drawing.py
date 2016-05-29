@@ -12,7 +12,8 @@ import xml.dom.minidom as dom
 def begin():
     print """\
 <svg version="1.1" baseProfile="full" xmlns="http://www.w3.org/2000/svg"
-     width="800" height="800" viewBox="-400 -400 800 800">"""
+     width="800" height="800" viewBox="-400.5 -400.5 800 800">"""
+# (viewBox's extra .5 makes for crisp lines at integer coordinates.)
 
 def end():
     print """\
