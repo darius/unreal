@@ -27,6 +27,7 @@ class Constraint(constraints.Constraint):
 
 def equate(expr1, expr2):
     zero(expr1 - expr2)
+    return expr2
 
 def zero(expr):
     Constraint(expr.lin_exp)
