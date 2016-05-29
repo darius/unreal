@@ -33,9 +33,9 @@ def text(string, justified, at):
            % (anchor, x*xscale, y*yscale, xml_escape(string)))
 
 anchorings = {
-    'left':  'start',
-    '':      'middle',
-    'right': 'end',
+    'left':   'start',
+    'center': 'middle',
+    'right':  'end',
 }
 
 def xml_escape(string):

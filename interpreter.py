@@ -50,7 +50,7 @@ class Text(Struct('justified string where')):
         env.drawers.append((self, env))
     def draw(self, env):
         at = self.where.evaluate(env).get_value()
-        drawing.text(self.string, self.justified, to_coords(at))
+        drawing.text(self.string, self.justified or 'center', to_coords(at))
 
 def to_coords(point):
     return point.real, point.imag

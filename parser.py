@@ -13,7 +13,8 @@ box:       name '{'_ [stmt* :hug] '}'_                  :Box.
 stmt:      'var'__ name (','_ name)* ';'_          :hug :Decl
          | 'conn'__ expr ('to'__ expr)+ ';'_       :hug :Conn
          | 'put'__ [name ':'_ | :None] box ';'_         :Put
-         | {'left'|'right'|}__ string 'at'__ expr ';'_  :Text
+         | {'left'|'right'|'center'|}__
+             string 'at'__ expr ';'_                    :Text
          | expr ('='_ expr)+ ';'_                  :hug :Equate 
          | expr ('~'_ expr)+ ';'_                  :hug :Default.
 
