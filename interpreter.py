@@ -8,6 +8,7 @@ import operator
 from structs import Struct
 import linear_constraints as LC
 import linear_equations as LE
+import drawing
 
 class Environment(Struct('types drawers frames')):
     def spawn(self, frame):
@@ -16,8 +17,10 @@ class Environment(Struct('types drawers frames')):
 def run(defs):
     env = Environment({box.name: box for box in defs}, [], ({},))
     env.types['main'].make(env)
+    drawing.begin()
     for drawer, subenv in env.drawers:
         drawer.draw(subenv)
+    drawing.end()
 
 counter = count(1)
 
@@ -39,14 +42,18 @@ class Conn(Struct('points')):
     def run(self, env):
         env.drawers.append((self, env))
     def draw(self, env):
-        print 'conn', [p.evaluate(env).get_value() for p in self.points]
+        points = [p.evaluate(env).get_value() for p in self.points]
+        drawing.polyline(map(to_coords, points))
 
 class Text(Struct('justified string where')):
     def run(self, env):
         env.drawers.append((self, env))
     def draw(self, env):
         at = self.where.evaluate(env).get_value()
-        print 'text', self.justified, 'at', at, repr(self.string)
+        drawing.text(self.string, self.justified, to_coords(at))
+
+def to_coords(point):
+    return point.real, point.imag
 
 class Put(Struct('opt_name box')):
     def run(self, env):
