@@ -1,5 +1,5 @@
 """
-Abstract syntax for IDEAL.
+Interpreter for IDEAL abstract syntax.
 """
 
 from itertools import count
@@ -9,9 +9,9 @@ from structs import Struct
 import linear_constraints as LC
 import linear_equations as LE
 
-class Environment(Struct('types drawers things')):
-    def spawn(self, things):
-        return Environment(self.types, self.drawers, things)
+class Environment(Struct('types drawers frame')):
+    def spawn(self, frame):
+        return Environment(self.types, self.drawers, frame)
 
 def run(defs):
     env = Environment({box.name: box for box in defs}, [], {})
@@ -33,7 +33,7 @@ class Decl(Struct('names')):
     def run(self, env):
         for name in self.names:
             lin_exp = LE.LinExp(0, [(LC.Variable(name), 1)])
-            env.things[name] = LC.Number(lin_exp)
+            env.frame[name] = LC.Number(lin_exp)
 
 class Conn(Struct('points')):
     def run(self, env):
@@ -52,7 +52,7 @@ class Put(Struct('opt_name box')):
     def run(self, env):
         name = self.opt_name or gensym()
         subenv = env.spawn({}) # XXX need current env too, for equate
-        env.things[name] = env.types[self.box.name].make(subenv)
+        env.frame[name] = env.types[self.box.name].make(subenv)
         for stmt in self.box.stmts:
             stmt.run(subenv)
 
@@ -67,7 +67,7 @@ class Equate(Struct('parts')):
 
 class Ref(Struct('name')):
     def evaluate(self, env):
-        return env.things[self.name]
+        return env.frame[self.name]
 
 class Of(Struct('ref field')):
     def evaluate(self, env):
