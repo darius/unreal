@@ -25,7 +25,7 @@ expr:      term ( '+'_ term :Add
 term:      factor ( '*'_ factor :Mul
                   | '/'_ factor :Div )*.
 
-factor:    atom ('['_ expr ','_ expr ']'_ :Interpolate)*.
+factor:    atom ('['_ expr ','_ expr ']'_ :Relatively)*.
 
 atom:      '('_ number ','_ number ')'_        :complex :Literal
          | number                              :complex :Literal

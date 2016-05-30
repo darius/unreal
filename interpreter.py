@@ -116,9 +116,11 @@ class Div(BinaryOp): operate = operator.truediv
 
 def Negate(expr): return Sub(Literal(0j), expr)
 
-class Interpolate(Struct('alpha zero one')):
+class Relatively(Struct('coord zero one')):
+    """Linear interpolate/extrapolate, i.e. `coord` in the coordinate
+    system that places 0 at `zero` and 1 at `one`."""
     def evaluate(self, env):
-        alpha = self.alpha.evaluate(env)
+        coord = self.coord.evaluate(env)
         zero = self.zero.evaluate(env)
         one = self.one.evaluate(env)
-        return zero + (one - zero) * alpha;
+        return zero + (one - zero) * coord;
