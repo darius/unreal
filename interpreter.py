@@ -10,10 +10,10 @@ import linear_constraints as LC
 import linear_equations as LE
 import drawing
 
-class Environment(Struct('types constrainers drawers frames')):
-    def spawn(self, frame):
+class Environment(Struct('types constrainers drawers prefix frames')):
+    def spawn(self, name):
         return Environment(self.types, self.constrainers, self.drawers,
-                           self.frames + (frame,))
+                           self.prefix + name + '.', self.frames + ({},))
     def add_constrainer(self, constrainer):
         self.constrainers.append((constrainer, self))
     def add_drawer(self, drawer):
@@ -21,7 +21,7 @@ class Environment(Struct('types constrainers drawers frames')):
 
 def run(defs):
     root_env = Environment({box.name: box for box in defs},
-                           [], [], ({},))
+                           [], [], '', ({},))
     # First create all the variables...
     root_env.types['main'].make(root_env)
 
@@ -38,7 +38,7 @@ def run(defs):
 counter = count(1)
 
 def gensym():
-    return 'g#%d' % next(counter)
+    return '#%d' % next(counter)
 
 class Box(Struct('name stmts')):
     def make(self, env):
@@ -48,7 +48,7 @@ class Box(Struct('name stmts')):
 class Decl(Struct('names')):
     def build(self, env):
         for name in self.names:
-            lin_exp = LE.LinExp(0, [(LC.Variable(name), 1)])
+            lin_exp = LE.LinExp(0, [(LC.Variable(env.prefix + name), 1)])
             env.frames[-1][name] = LC.Number(lin_exp)
 
 class Conn(Struct('points')):
@@ -71,7 +71,7 @@ def to_coords(point):
 class Put(Struct('opt_name box')):
     def build(self, env):
         name = self.opt_name or gensym()  # (The default name's just for debugging.)
-        subenv = env.spawn({})
+        subenv = env.spawn(name)
         env.types[self.box.name].make(subenv)
         env.frames[-1][name] = subenv.frames[-1]
         for stmt in self.box.stmts:
