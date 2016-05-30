@@ -76,7 +76,7 @@ def zeroish(u):
 # in the places where zeroish() is now called, and the solver
 # occasionally failed to find a solution. This did not even happen
 # reproducibly, I'm guessing because the operations performed
-# depends on the order of elements in hashtables, which varies
+# depend on the order of elements in hashtables, which varies
 # from run to run. Let's see if the gremlins go away.
 # (Or maybe the solver's just incorrect. I should review it.)
 epsilon = sys.float_info.epsilon * 5
