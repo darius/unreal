@@ -27,13 +27,13 @@ term:      factor ( '*'_ factor :Mul
 
 factor:    atom ('['_ expr ','_ expr ']'_ :Interpolate)*.
 
-atom:      '('_ number ','_ number ')'_            :complex :Literal
-         | number                                  :complex :Literal
-         | '-'_ atom                               :Negate
+atom:      '('_ number ','_ number ')'_        :complex :Literal
+         | number                              :complex :Literal
+         | '-'_ atom                                    :Negate
          | '('_ expr ')'_
          | name :Ref ('.'_ name :Of)*.
 
-number:    { '-'? uint (frac exp? | exp)? } _      :float.
+number:    { '-'? uint (frac exp? | exp)? } _  :float.
 uint     = '0' !/\d/
          | /[1-9]\d*/.
 frac     = '.' /\d+/.
