@@ -10,7 +10,7 @@ class Variable(constraints.Variable):
     def __init__(self, name):
         constraints.Variable.__init__(self)
         self.name = name
-    def __str__(self):
+    def __repr__(self):
         return '<Variable %s>' % self.name
 
 class Constraint(constraints.Constraint):
