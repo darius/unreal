@@ -1,0 +1,29 @@
+/* Same as the pythagoras example, but trying to factor out
+   the commonality that we're creating squares, as a subtype
+   of rect. IDEAL doesn't directly support subtypes, so this
+   is a hack. */
+
+square {
+    var side;
+    ht = wd = side;
+}
+
+pythagoras {
+    put first: rect {
+        put s: square { side = 1; }
+        sw = 0;
+    }
+    put next: rect {
+        put square { side = first.s.side; }
+        nw = first.se;
+    }
+    put last: rect {
+        put square {}
+        sw = first.ne;
+        se = next.ne;
+    }
+}
+
+main {
+    put pythagoras { }
+}

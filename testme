@@ -6,4 +6,5 @@ python minideal.py eg/1 >out/1.svg && diff -u ref/1.svg out/1.svg &&
 python minideal.py eg/2 >out/2.svg && diff -u ref/2.svg out/2.svg &&
 python minideal.py eg/library eg/3 >out/3.svg && diff -u ref/3.svg out/3.svg &&
 python minideal.py eg/library eg/4 >out/4.svg && diff -u ref/4.svg out/4.svg &&
-python minideal.py eg/library eg/pythagoras >out/pythagoras.svg && diff -u ref/pythagoras.svg out/pythagoras.svg
+python minideal.py eg/library eg/pythagoras >out/pythagoras.svg && diff -u ref/pythagoras.svg out/pythagoras.svg &&
+python minideal.py eg/library eg/pythagoras-squares >out/pythagoras-squares.svg && diff -u ref/pythagoras-squares.svg out/pythagoras-squares.svg
