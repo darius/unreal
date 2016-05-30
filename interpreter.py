@@ -64,7 +64,9 @@ class Put(Struct('opt_name box')):
         for stmt in self.box.stmts:
             stmt.run(subenv)
 
-class Default(Struct('parts')): pass # XXX
+class Default(Struct('parts')):
+    def run(self, env):
+        assert False, "XXX unimplemented"
 
 class Equate(Struct('parts')):
     def run(self, env):
