@@ -1,10 +1,10 @@
-# ideal
+# unreal
 
 Christopher Van Wyk's IDEAL picture language redone in Python: or
 anyway, some subset thereof, as far as I get, for the sake of
 understanding it better.
 
-To run it: `python minideal.py sourcefile1 sourcefile2 ...`
+To run it: `python unreal.py sourcefile1 sourcefile2 ...`
 
 This uses [Parson](https://github.com/darius/parson) for parsing.
 
