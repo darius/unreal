@@ -22,7 +22,7 @@ class Environment(Struct('types constrainers drawers frames')):
 def run(defs):
     root_env = Environment({box.name: box for box in defs},
                            [], [], ({},))
-    # First we create all the variables...
+    # First create all the variables...
     root_env.types['main'].make(root_env)
 
     # ...then create the constraints. We waited because an equation
