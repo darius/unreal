@@ -3,12 +3,13 @@ Solve sparse systems of linear equations.
 """
 
 from __future__ import division
+import sys
 
 class LinExp(object):
     "A linear expression in some variables."
     def __init__(self, constant, terms):
         self.constant = constant
-        self.terms = {var: val for var, val in terms if val != 0}
+        self.terms = {var: val for var, val in terms if val != 0} # XXX use zeroish?
     def combine(self, c, e2, c2):
         return LinExp(c * self.constant + c2 * e2.constant,
                       ((var, (c * self.coefficient(var)
@@ -31,12 +32,12 @@ class LinExp(object):
     # defines a variable if it's something like 1*x-3==0 (with just
     # one variable), and so on.
     def is_inconsistent(self):
-        return self.is_constant() and self.constant != 0
+        return self.is_constant() and not zeroish(self.constant)
     def is_tautology(self):
-        return self.is_constant() and self.constant == 0
+        return self.is_constant() and zeroish(self.constant)
     def defines_var(self):
         vars = self.terms.keys()
-        return (vars if len(vars) == 1 and self.coefficient(vars[0]) == 1
+        return (vars if len(vars) == 1 and zeroish(1 - self.coefficient(vars[0]))
                 else ())
     def substitute_for(self, var, eq):
         """Return an equivalent equation with var eliminated by
@@ -64,6 +65,21 @@ class LinExp(object):
             return ' - ' + f[1:] if f.startswith('-') else ' + ' + f
         return '(0 = %s%s)' % (format(items[0]),
                                ''.join(map(combiner, items[1:])))
+
+def zeroish(u):
+    "Is float u approximately zero?"
+    return abs(u) <= epsilon
+
+# XXX This is a dumb random pick for this value.
+# Of course the goal is to get reasonable answers in the face
+# of floating-point rounding. I started with exact equality tests
+# in the places where zeroish() is now called, and the solver
+# occasionally failed to find a solution. This did not even happen
+# reproducibly, I'm guessing because the operations performed
+# depends on the order of elements in hashtables, which varies
+# from run to run. Let's see if the gremlins go away.
+# (Or maybe the solver's just incorrect. I should review it.)
+epsilon = sys.float_info.epsilon * 5
 
 zero = LinExp(0, ())
 
