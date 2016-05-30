@@ -55,10 +55,10 @@ class LinExp(object):
             items = [('', self.constant)] + items
         if not items: return '(0 = 0)'
         def format((var, c)):
-            if var == '': return '%g' % c
+            if var == '': return '%s' % c
             if c == 1:    return '%s' % (var,)
             if c == -1:   return '-%s' % (var,)
-            return '%g%s' % (c, var)
+            return '%s%s' % (c, var)
         def combiner(pair):      # XXX rename
             f = format(pair)
             return ' - ' + f[1:] if f.startswith('-') else ' + ' + f
