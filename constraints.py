@@ -11,7 +11,9 @@ class Variable(object):
         if self.value is None:
             self.constraints.add(constraint)
     def get_value(self):
-        if self.value is None: self.solve()
+        if self.value is None:
+            self.solve()
+            assert self.value is not None, "Unsolved: %r" % self
         return self.value
     def solve(self):
         assert self.constraints, "Unconstrained: %r" % self
