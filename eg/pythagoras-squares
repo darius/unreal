@@ -10,15 +10,15 @@ square {
 
 pythagoras {
     put first: rect {
-        put s: square { side = 1; }
+        put sq: square { side = 1; }
         sw = 0;
     }
     put next: rect {
-        put square { side = first.s.side; }
+        put square { side = first.sq.side; }
         nw = first.se;
     }
     put last: rect {
-        put square {}
+        put square { }
         sw = first.ne;
         se = next.ne;
     }
