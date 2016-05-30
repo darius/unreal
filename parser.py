@@ -29,6 +29,7 @@ factor:    atom ('['_ expr ','_ expr ']'_ :Interpolate)*.
 
 atom:      '('_ number ','_ number ')'_            :complex :Literal
          | number                                  :complex :Literal
+         | '-'_ atom                               :Negate
          | '('_ expr ')'_
          | name :Ref ('.'_ name :Of)*.
 

@@ -114,6 +114,8 @@ class Sub(BinaryOp): operate = operator.sub
 class Mul(BinaryOp): operate = operator.mul
 class Div(BinaryOp): operate = operator.truediv
 
+def Negate(expr): return Sub(Literal(0j), expr)
+
 class Interpolate(Struct('alpha zero one')):
     def evaluate(self, env):
         alpha = self.alpha.evaluate(env)
