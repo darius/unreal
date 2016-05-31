@@ -22,15 +22,18 @@ def end():
 xscale =  100
 yscale = -100
 
+def xstr(x): return '%g' % round(x*xscale, 1)
+def ystr(y): return '%g' % round(y*yscale, 1)
+
 def polyline(points):
     print ('<polyline points="%s" fill="transparent" stroke="black" stroke-width="1"/>'
-           % ', '.join('%g %g' % (x*xscale, y*yscale) for x,y in points))
+           % ', '.join('%s %s' % (xstr(x), ystr(y)) for x,y in points))
 
 def text(string, justified, at):
     anchor = anchorings[justified]
     x, y = at
-    print ('<text text-anchor="%s" x="%g" y="%g">%s</text>'
-           % (anchor, x*xscale, y*yscale, xml_escape(string)))
+    print ('<text text-anchor="%s" x="%s" y="%s">%s</text>'
+           % (anchor, xstr(x), ystr(y), xml_escape(string)))
 
 anchorings = {
     'left':   'start',
