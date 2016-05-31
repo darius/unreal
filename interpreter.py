@@ -8,9 +8,9 @@ import operator
 from structs import Struct
 import drawing, solver
 
-class Environment(Struct('types constrainers drawers prefix frames')):
+class Environment(Struct('types constrainers constraints drawers prefix frames')):
     def spawn(self, name):
-        return Environment(self.types, self.constrainers, self.drawers,
+        return Environment(self.types, self.constrainers, self.constraints, self.drawers,
                            self.prefix + name + '.', self.frames + ({},))
     def add_constrainer(self, constrainer):
         self.constrainers.append((constrainer, self))
@@ -19,7 +19,7 @@ class Environment(Struct('types constrainers drawers prefix frames')):
 
 def run(defs):
     root_env = Environment({box.name: box for box in defs},
-                           [], [], '', ({},))
+                           [], [], [], '', ({},))
     # First create all the variables...
     root_env.types['main'].make(root_env)
 
@@ -27,6 +27,8 @@ def run(defs):
     # might use forward refs.
     for constrainer, env in root_env.constrainers:
         constrainer.constrain(env)
+
+    solver.solve(root_env.constraints)
 
     drawing.begin()
     for drawer, env in root_env.drawers:
@@ -83,7 +85,7 @@ class Equate(Struct('parts')):
         env.add_constrainer(self)
     def constrain(self, env):
         def eq(lhs, rhs):
-            solver.equate(lhs, rhs)
+            env.constraints.append(solver.equate(lhs, rhs))
             return rhs
         reduce(eq, (expr.evaluate(env) for expr in self.parts))
 
