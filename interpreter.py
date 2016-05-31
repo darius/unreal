@@ -82,7 +82,10 @@ class Equate(Struct('parts')):
     def build(self, env):
         env.add_constrainer(self)
     def constrain(self, env):
-        reduce(solver.equate, (expr.evaluate(env) for expr in self.parts))
+        def eq(lhs, rhs):
+            solver.equate(lhs, rhs)
+            return rhs
+        reduce(eq, (expr.evaluate(env) for expr in self.parts))
 
 class Ref(Struct('name')):
     def evaluate(self, env):

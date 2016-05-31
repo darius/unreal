@@ -1,3 +1,10 @@
+"""
+A linear constraint requires a linear combination of variables to = 0.
+We represent the constraint as a linear expression, with the '=0' implicit.
+A variable may have a value; a constraint enforces a relation
+between variables. Variables and constraints form a network.
+"""
+
 from __future__ import division
 import sys
 
@@ -8,15 +15,7 @@ def make_variable(name):
     return LinExp(0, [(Variable(name), 1)])
 
 def equate(expr1, expr2):
-    Constraint(expr1 - expr2)
-    return expr2
-
-"""
-A linear constraint requires a linear combination of variables to = 0.
-We represent the constraint as a linear expression, with the '=0' implicit.
-A variable may have a value; a constraint enforces a relation
-between variables. Variables and constraints form a network.
-"""
+    return Constraint(expr1 - expr2)
 
 class Constraint(object):
     def __init__(self, lin_exp):
