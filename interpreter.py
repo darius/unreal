@@ -73,8 +73,7 @@ class Put(Struct('opt_name box')):
         subenv = env.spawn(name)
         env.types[self.box.name].make(subenv)
         env.frames[-1][name] = subenv.frames[-1]
-        for stmt in self.box.stmts:
-            stmt.build(subenv)
+        self.box.make(subenv)
 
 class Default(Struct('parts')):
     def build(self, env):
