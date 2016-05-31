@@ -34,7 +34,7 @@ class Number(object):
     def __neg__(self):            return self.scale(-1)
     def __add__(self, other):     return self.combine(1, other, 1)
     def __sub__(self, other):     return self.combine(1, other, -1)
-    def __truediv__(self, other): return self.scale(1. / other.as_scalar())
+    def __truediv__(self, other): return self.scale(1 / other.as_scalar())
     def __mul__(self, other):
         if self.lin_exp.is_constant():
             return other.scale(self.lin_exp.constant)
