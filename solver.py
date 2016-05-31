@@ -93,8 +93,6 @@ class LinExp(object):
                        for var in self.variables() | e2.variables()))
     def scale(self, c):
         return self.combine(c, zero, 0)
-    def XXXadd(self, e2):
-        return self.combine(1, e2, 1)
     def coefficient(self, variable):
         return self.terms.get(variable, 0)
     def variables(self):
