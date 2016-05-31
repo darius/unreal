@@ -35,11 +35,6 @@ def run(defs):
         drawer.draw(env)
     drawing.end()
 
-counter = count(1)
-
-def gensym():
-    return '#%d' % next(counter)
-
 class Box(Struct('name stmts')):
     def make(self, env):
         for stmt in self.stmts:
@@ -74,6 +69,10 @@ class Put(Struct('opt_name box')):
         env.types[self.box.name].make(subenv)
         env.frames[-1][name] = subenv.frames[-1]
         self.box.make(subenv)
+
+def gensym():
+    return '#%d' % next(counter)
+counter = count(1)
 
 class Default(Struct('parts')):
     def build(self, env):
