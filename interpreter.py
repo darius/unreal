@@ -6,9 +6,7 @@ from itertools import count
 import operator
 
 from structs import Struct
-import linear_constraints as LC
-import linear_equations as LE
-import drawing
+import drawing, solver
 
 class Environment(Struct('types constrainers drawers prefix frames')):
     def spawn(self, name):
@@ -48,8 +46,8 @@ class Box(Struct('name stmts')):
 class Decl(Struct('names')):
     def build(self, env):
         for name in self.names:
-            lin_exp = LE.LinExp(0, [(LC.Variable(env.prefix + name), 1)])
-            env.frames[-1][name] = LC.Number(lin_exp)
+            lin_exp = solver.LinExp(0, [(solver.Variable(env.prefix + name), 1)])
+            env.frames[-1][name] = solver.Number(lin_exp)
 
 class Conn(Struct('points')):
     def build(self, env):
@@ -85,7 +83,7 @@ class Equate(Struct('parts')):
     def build(self, env):
         env.add_constrainer(self)
     def constrain(self, env):
-        reduce(LC.equate, (expr.evaluate(env) for expr in self.parts))
+        reduce(solver.equate, (expr.evaluate(env) for expr in self.parts))
 
 class Ref(Struct('name')):
     def evaluate(self, env):
@@ -102,7 +100,7 @@ class Of(Struct('ref field')):
 
 class Literal(Struct('value')):
     def evaluate(self, env):
-        return LC.Number(LE.LinExp(self.value, ()))
+        return solver.Number(solver.LinExp(self.value, ()))
 
 class BinaryOp(Struct('arg1 arg2')):
     def evaluate(self, env):
