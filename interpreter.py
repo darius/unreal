@@ -46,8 +46,7 @@ class Box(Struct('name stmts')):
 class Decl(Struct('names')):
     def build(self, env):
         for name in self.names:
-            lin_exp = solver.LinExp(0, [(solver.Variable(env.prefix + name), 1)])
-            env.frames[-1][name] = solver.Number(lin_exp)
+            env.frames[-1][name] = solver.make_variable(env.prefix + name)
 
 class Conn(Struct('points')):
     def build(self, env):
@@ -100,7 +99,7 @@ class Of(Struct('ref field')):
 
 class Literal(Struct('value')):
     def evaluate(self, env):
-        return solver.Number(solver.LinExp(self.value, ()))
+        return solver.make_constant(self.value)
 
 class BinaryOp(Struct('arg1 arg2')):
     def evaluate(self, env):

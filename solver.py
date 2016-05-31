@@ -1,6 +1,16 @@
 from __future__ import division
 import sys
 
+def make_constant(value):
+    return Number(LinExp(value, ()))
+
+def make_variable(name):
+    return Number(LinExp(0, [(Variable(name), 1)]))
+
+def equate(expr1, expr2):
+    Constraint((expr1 - expr2).lin_exp)
+    return expr2
+
 """
 A variable may have a value; a constraint enforces a relation
 between variables. Variables and constraints form a network.
@@ -56,10 +66,6 @@ class Constraint(object):
         constraints.add(self)
         for variable in self.get_variables():
             variable.add_connected_constraints(constraints)
-
-def equate(expr1, expr2):
-    Constraint((expr1 - expr2).lin_exp)
-    return expr2
 
 class Number(object):
     def __init__(self, lin_exp):
