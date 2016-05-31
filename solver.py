@@ -12,60 +12,9 @@ def equate(expr1, expr2):
     return expr2
 
 """
-A variable may have a value; a constraint enforces a relation
-between variables. Variables and constraints form a network.
-"""
-
-class Variable(object):
-    def __init__(self, name):
-        self.constraints = set()
-        self.name = name
-        self.value = None
-    def constrain(self, constraint):
-        if self.value is None:
-            self.constraints.add(constraint)
-    def get_value(self):
-        if self.value is None:
-            self.solve()
-            assert self.value is not None, "Unsolved: %r" % self
-        return self.value
-    def solve(self):
-        assert self.constraints, "Unconstrained: %r" % self
-        next(iter(self.constraints)).solve() # XXX solve them all?
-    def add_connected_constraints(self, constraints):
-        for constraint in self.constraints:
-            constraint.add_connected_constraints(constraints)
-    def assign(self, value):
-        assert self.value is None or self.value == value
-        self.value = value
-    def __repr__(self):
-        return self.name
-
-"""
 A linear constraint requires a linear combination of variables to = 0.
 We represent the constraint as a linear expression, with the '=0' implicit.
 """
-
-class Constraint(object):
-    def __init__(self, lin_exp):
-        self.lin_exp = lin_exp
-        for variable in lin_exp.variables():
-            variable.constrain(self)
-    def get_variables(self):
-        return self.lin_exp.variables()
-    def solve(self):
-        eqns = [c.lin_exp for c in self.get_connected_constraints()]
-        for variable, value in solve_equations(eqns).items():
-            variable.assign(value)
-    def get_connected_constraints(self):
-        constraints = set()
-        self.add_connected_constraints(constraints)
-        return constraints
-    def add_connected_constraints(self, constraints):
-        if self in constraints: return
-        constraints.add(self)
-        for variable in self.get_variables():
-            variable.add_connected_constraints(constraints)
 
 class Number(object):
     def __init__(self, lin_exp):
@@ -91,6 +40,57 @@ class Number(object):
             return other.scale(self.lin_exp.constant)
         else:
             return self.scale(other.as_scalar())
+
+"""
+A variable may have a value; a constraint enforces a relation
+between variables. Variables and constraints form a network.
+"""
+
+class Constraint(object):
+    def __init__(self, lin_exp):
+        self.lin_exp = lin_exp
+        for variable in lin_exp.variables():
+            variable.constrain(self)
+    def get_variables(self):
+        return self.lin_exp.variables()
+    def solve(self):
+        eqns = [c.lin_exp for c in self.get_connected_constraints()]
+        for variable, value in solve_equations(eqns).items():
+            variable.assign(value)
+    def get_connected_constraints(self):
+        constraints = set()
+        self.add_connected_constraints(constraints)
+        return constraints
+    def add_connected_constraints(self, constraints):
+        if self in constraints: return
+        constraints.add(self)
+        for variable in self.get_variables():
+            variable.add_connected_constraints(constraints)
+
+class Variable(object):
+    def __init__(self, name):
+        self.constraints = set()
+        self.name = name
+        self.value = None
+    def constrain(self, constraint):
+        if self.value is None:
+            self.constraints.add(constraint)
+    def get_value(self):
+        if self.value is None:
+            self.solve()
+            assert self.value is not None, "Unsolved: %r" % self
+        return self.value
+    def solve(self):
+        assert self.constraints, "Unconstrained: %r" % self
+        next(iter(self.constraints)).solve() # XXX solve them all?
+    def add_connected_constraints(self, constraints):
+        for constraint in self.constraints:
+            constraint.add_connected_constraints(constraints)
+    def assign(self, value):
+        assert self.value is None or self.value == value
+        self.value = value
+    def __repr__(self):
+        return self.name
 
 """
 Solve sparse systems of linear equations.
