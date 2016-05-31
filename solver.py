@@ -1,8 +1,6 @@
 """
 A linear constraint requires a linear combination of variables to = 0.
 We represent the constraint as a linear expression, with the '=0' implicit.
-A variable may have a value; a constraint enforces a relation
-between variables. Variables and constraints form a network.
 """
 
 from __future__ import division
