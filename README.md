@@ -5,14 +5,15 @@ anyway, some subset thereof, as far as I get, for the sake of
 understanding it better. This currently doesn't do:
 
   * drawing anything but line segments
-  * built-in functions besides arithmetic
-  * default constraints
+  * re, im, conj functions
   * pens
   * boundaries and set operations
 
 What it does do:
 
   * solve so-called 'slightly nonlinear' constraints
+  * default constraints (like `a ~ b`)
+  * other built-in functions
 
 To run it: `python unreal.py sourcefile1 sourcefile2 ... >out.svg`
 
