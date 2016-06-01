@@ -21,7 +21,6 @@ def solve(eqns):
 
 class Variable(object):
     def __init__(self, name):
-        self.constraints = set()
         self.name = name
         self.value = None
     def get_value(self):
