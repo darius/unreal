@@ -2,8 +2,8 @@
 Parse (our subset of) IDEAL.
 """
 
-from parson import Grammar, Unparsable
-import interpreter
+from parson import Grammar, push, Unparsable
+import interpreter, solver
 
 grammar = Grammar(r"""
 program:   _ box* !/./.
@@ -31,7 +31,11 @@ atom:      '('_ number ','_ number ')'_        :complex :Literal
          | number                              :complex :Literal
          | '-'_ atom                                    :Negate
          | '('_ expr ')'_
+         | unaryfn '('_ expr ')'_                       :CallPrim
          | name :Ref ('.'_ name :Of)*.
+
+unaryfn:   'abs'__  :Abs
+         | 'cis'__  :Cis.
 
 number:    { '-'? (/\d*/ '.' /\d+/ | /\d+/) } _  :float.
 
@@ -42,5 +46,7 @@ name     = /([A-Za-z_][A-Za-z_0-9]*)/ _.
 _        = (/\s+/ | comment)*.
 comment  = '/*' (!'*/' /.|\n/)* '*/'.
 """)
-parser = grammar(**interpreter.__dict__)
+parser = grammar(Abs=push(solver.Abs),
+                 Cis=push(solver.Cis),
+                 **interpreter.__dict__)
 parse = parser.program

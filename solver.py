@@ -6,7 +6,7 @@ of the variables, and continue.
 """
 
 from __future__ import division
-import sys
+import cmath, math, sys
 
 from structs import Struct
 
@@ -86,6 +86,25 @@ class Div(Struct('arg1 arg2', supertype=(Expr,))):
         if varies(terms2):
             raise Nonlinear()
         return combo1.scale(1 / constant(terms2))
+
+class Abs(Struct('arg', supertype=(Expr,))):
+    def evaluate(self):
+        combo = self.arg.evaluate()
+        terms = combo.expand()
+        if varies(terms):
+            raise Nonlinear()
+        value = constant(terms)
+        return make_constant(abs(value))
+
+class Cis(Struct('arg', supertype=(Expr,))):
+    def evaluate(self):         # XXX code duplication
+        combo = self.arg.evaluate()
+        terms = combo.expand()
+        if varies(terms):
+            raise Nonlinear()
+        value = constant(terms)
+        assert zeroish(value.imag)   # XXX complain some other way
+        return make_constant(cmath.exp(1j * math.radians(value.real)))
 
 class Combo(Expr):
     def __init__(self, terms):
