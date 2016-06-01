@@ -33,11 +33,7 @@ atom:      '('_ number ','_ number ')'_        :complex :Literal
          | '('_ expr ')'_
          | name :Ref ('.'_ name :Of)*.
 
-number:    { '-'? uint (frac exp? | exp)? } _  :float.
-uint     = '0' !/\d/
-         | /[1-9]\d*/.
-frac     = '.' /\d+/.
-exp      = /[eE][+-]?\d+/.
+number:    { '-'? (/\d*/ '.' /\d+/ | /\d+/) } _  :float.
 
 string   = '"' {/[^\\"]*/} '"' _.
 
