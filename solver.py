@@ -45,7 +45,6 @@ class LinExp(object):
     def as_scalar(self):
         assert self.is_constant(), 'nope %r' % self
         return self.constant
-    def __neg__(self):            return self.scale(-1)
     def __add__(self, other):     return self.combine(1, other, 1)
     def __sub__(self, other):     return self.combine(1, other, -1)
     def __truediv__(self, other): return self.scale(1 / other.as_scalar())
