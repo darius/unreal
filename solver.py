@@ -87,24 +87,22 @@ class Div(Struct('arg1 arg2', supertype=(Expr,))):
             raise Nonlinear()
         return combo1.scale(1 / constant(terms2))
 
-class Abs(Struct('arg', supertype=(Expr,))):
+class NonlinearFn(Struct('fn arg', supertype=(Expr,))):
     def evaluate(self):
         combo = self.arg.evaluate()
         terms = combo.expand()
         if varies(terms):
             raise Nonlinear()
         value = constant(terms)
-        return make_constant(abs(value))
+        assert isinstance(value, complex), repr(value)
+        return make_constant(self.fn(value))
 
-class Cis(Struct('arg', supertype=(Expr,))):
-    def evaluate(self):         # XXX code duplication
-        combo = self.arg.evaluate()
-        terms = combo.expand()
-        if varies(terms):
-            raise Nonlinear()
-        value = constant(terms)
-        assert zeroish(value.imag)   # XXX complain some other way
-        return make_constant(cmath.exp(1j * math.radians(value.real)))
+def cis(angle):
+    assert zeroish(angle.imag)   # XXX complain some other way
+    return cmath.exp(1j * math.radians(angle.real))
+
+def Abs(arg): return NonlinearFn(abs, arg)
+def Cis(arg): return NonlinearFn(cis, arg)
 
 class Combo(Expr):
     def __init__(self, terms):
