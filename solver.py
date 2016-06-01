@@ -29,9 +29,10 @@ def solve(equations):
             except Nonlinear:
                 pending.append(expr)
             else:
-                if combo.varies():
-                    combo.pivot() # XXX name?
-                elif zeroish(combo.constant()):
+                terms = combo.expand()
+                if varies(terms):
+                    eliminate_a_variable(terms)
+                elif zeroish(constant(terms)):
                     pass # A consistent but useless equation: drop it.
                 else:
                     consistent_so_far = False
@@ -52,7 +53,10 @@ class Expr(object):
             combo = self.evaluate()
         except Nonlinear:
             raise NotFixed(self)
-        return combo.constant()
+        terms = combo.expand()
+        if varies(terms):
+            raise NotFixed(self)
+        return constant(terms)
     def __add__(self, other):     return Combine(self, 1, other)
     def __sub__(self, other):     return Combine(self, -1, other)
     def __mul__(self, other):     return Mul(self, other)
@@ -67,43 +71,30 @@ class Mul(Struct('arg1 arg2', supertype=(Expr,))):
     def evaluate(self):
         combo1 = self.arg1.evaluate()
         combo2 = self.arg2.evaluate()
-        if combo1.varies() and combo2.varies():
+        terms1 = combo1.expand()
+        terms2 = combo2.expand()
+        if varies(terms1) and varies(terms2):
             raise Nonlinear()
-        if combo1.varies(): return combo1.scale(combo2.constant())
-        else:               return combo2.scale(combo1.constant())
+        if varies(terms1): return combo1.scale(constant(terms2))
+        else:              return combo2.scale(constant(terms1))
 
 class Div(Struct('arg1 arg2', supertype=(Expr,))):
     def evaluate(self):
         combo1 = self.arg1.evaluate()
         combo2 = self.arg2.evaluate()
-        if combo2.varies():
+        terms2 = combo2.expand()
+        if varies(terms2):
             raise Nonlinear()
-        return combo1.scale(1 / combo2.constant())
+        return combo1.scale(1 / constant(terms2))
 
 class Combo(Expr):
     def __init__(self, terms):
         self.terms = {v: c for v,c in terms.iteritems() if not zeroish(c)}
     def evaluate(self):
         return self
-    def varies(self): # XXX this varies()/constant()/pivot() business duplicates work
-        terms = self.scale(1).terms
-        return any(v is not const_term for v in terms)
-    def constant(self):
-        terms = self.scale(1).terms
-        if any(v is not const_term for v in terms):
-            raise NotFixed(self)
-        return terms.get(const_term, 0)
-    def pivot(self):
-        terms = self.scale(1).terms
-        assert any(v is not const_term for v in terms)
-        ve, ce = max(((vi, ci)
-                      for vi,ci in terms.iteritems()
-                      if vi is not const_term),
-                     key=lambda (vi, ci): abs(ci))
-        ve.become(Combo({v: -c/ce
-                         for v,c in terms.iteritems()
-                         if v is not ve}))
-        # XXX Combo() does an unnecessary sweep of its argument
+    def expand(self):
+        self.terms = self.scale(1).terms
+        return self.terms
     def scale(self, c):
         accum = {}
         self.add_into(accum, c)
@@ -116,6 +107,22 @@ class Combo(Expr):
     def add_into(self, accum, c):
         for v, coeff in self.terms.iteritems():
             v.add_into(accum, c * coeff)
+
+def varies(terms):
+    return any(v is not const_term for v in terms)
+
+def constant(terms):
+    assert not varies(terms)
+    return terms.get(const_term, 0)
+
+def eliminate_a_variable(terms):
+    ve, ce = max(((vi, ci)
+                  for vi,ci in terms.iteritems()
+                  if vi is not const_term),
+                 key=lambda (vi,ci): abs(ci))
+    ve.become(Combo({v: -c/ce
+                     for v,c in terms.iteritems()
+                     if v is not ve}))
 
 class NotFixed(Exception):
     "An expression could not be reduced to a constant value."
@@ -132,13 +139,6 @@ class Variable(object):
             accum[self] = accum.get(self, 0) + c
         else:
             self.combo.add_into(accum, c)
-    def get_value(self):
-        try:
-            if self.combo is None: raise NotFixed(self)
-            return self.combo.constant()
-        except NotFixed:
-            print 'get_value of unfixed variable', self
-            return 1            # (arbitrary)
     def __repr__(self):
         return self.name
 
