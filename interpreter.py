@@ -6,7 +6,7 @@ from itertools import count
 import operator
 
 from structs import Struct
-import drawing, solver
+import renderer, solver
 
 class Environment(Struct('types constrainers constraints drawers prefix frames')):
     def spawn(self, name):
@@ -30,10 +30,10 @@ def run(defs):
 
     solver.solve(root_env.constraints)
 
-    drawing.begin()
+    renderer.begin()
     for drawer, env in root_env.drawers:
         drawer.draw(env)
-    drawing.end()
+    renderer.end()
 
 class Box(Struct('name stmts')):
     def make(self, env):
@@ -50,14 +50,14 @@ class Conn(Struct('points')):
         env.add_drawer(self)
     def draw(self, env):
         points = [p.evaluate(env).get_value() for p in self.points]
-        drawing.polyline(map(to_coords, points))
+        renderer.polyline(map(to_coords, points))
 
 class Text(Struct('justified string where')):
     def build(self, env):
         env.add_drawer(self)
     def draw(self, env):
         at = self.where.evaluate(env).get_value()
-        drawing.text(self.string, self.justified or 'center', to_coords(at))
+        renderer.text(self.string, self.justified or 'center', to_coords(at))
 
 def to_coords(point):
     return point.real, point.imag
