@@ -18,22 +18,32 @@ class Environment(Struct('types constrainers constraints drawers prefix frames')
         self.drawers.append((drawer, self))
 
 def run(defs):
-    root_env = Environment({box.name: box for box in defs},
-                           [], [], [], '', ({},))
-    # First create all the variables...
-    root_env.types['main'].make(root_env)
+    types = {}
+    for box in defs:
+        define(types, box.name, box)
+    root_env = Environment(types, [], [], [], '', ({},))
 
+    # First create all the variables...
+    types['main'].make(root_env)
     # ...then create the constraints. We waited because an equation
     # might use forward refs.
     for constrainer, env in root_env.constrainers:
         constrainer.constrain(env)
 
-    solver.solve(root_env.constraints)
+    # Take the constraints in reverse order because, e.g., in `put foo
+    # { x=y; }`, the `x=y` gets appended after foo's own equations,
+    # but is considered more specific. Try to resolve the more
+    # specific constraints first.
+    solver.solve(root_env.constraints[::-1])
 
     renderer.begin()
     for drawer, env in root_env.drawers:
         drawer.draw(env)
     renderer.end()
+
+def define(dict_, name, value):
+    assert name not in dict_, "Multiple definition: %s" % name
+    dict_[name] = value
 
 class Box(Struct('name stmts')):
     def make(self, env):
@@ -43,7 +53,7 @@ class Box(Struct('name stmts')):
 class Decl(Struct('names')):
     def build(self, env):
         for name in self.names:
-            env.frames[-1][name] = solver.make_variable(env.prefix + name)
+            define(env.frames[-1], name, solver.make_variable(env.prefix + name))
 
 class Conn(Struct('points')):
     def build(self, env):
@@ -67,25 +77,25 @@ class Put(Struct('opt_name box')):
         name = self.opt_name or gensym()  # (The default name's just for debugging.)
         subenv = env.spawn(name)
         env.types[self.box.name].make(subenv)
-        env.frames[-1][name] = subenv.frames[-1]
+        define(env.frames[-1], name, subenv.frames[-1])
         self.box.make(subenv)
 
 def gensym():
     return '#%d' % next(counter)
 counter = count(1)
 
-class Default(Struct('parts')):
-    def build(self, env):
-        assert False, "XXX unimplemented"
-
 class Equate(Struct('parts')):
+    defaulty = False
     def build(self, env):
         env.add_constrainer(self)
     def constrain(self, env):
         def eq(lhs, rhs):
-            env.constraints.append(solver.equate(lhs, rhs))
+            env.constraints.append(solver.Equate(self.defaulty, lhs, rhs))
             return rhs
         reduce(eq, (expr.evaluate(env) for expr in self.parts))
+
+class Default(Equate):
+    defaulty = True
 
 class Ref(Struct('name')):
     def evaluate(self, env):

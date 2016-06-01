@@ -16,14 +16,14 @@ def make_constant(value):
 def make_variable(name):
     return Combo({Variable(name): 1})
 
-def equate(expr1, expr2):
-    return expr1 - expr2
+def Equate(defaulty, expr1, expr2):
+    return defaulty, expr1 - expr2
 
 def solve(equations):
     consistent_so_far = True
     while equations:
         pending = []
-        for expr in equations:
+        for defaulty, expr in equations:
             try:
                 combo = expr.evaluate()
             except Nonlinear:
@@ -34,6 +34,8 @@ def solve(equations):
                     eliminate_a_variable(terms)
                 elif zeroish(constant(terms)):
                     pass # A consistent but useless equation: drop it.
+                elif defaulty:
+                    pass # It's OK to contradict a default.
                 else:
                     consistent_so_far = False
                     print 'Inconsistent', combo

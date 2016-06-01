@@ -20,10 +20,14 @@ listnode {  /* XXX why not inherit from rect, plus a line down the middle? */
 }
 
 arrow {
+    var head, headang;
+    head ~ 0.2;
+    headang ~ 25;
+
     var tl, hd, perp;
     conn tl to hd;
-    perp = 0.2*unit(tl-hd);
-    conn    hd + cis(25)*perp
+    perp = head * unit(tl-hd);
+    conn    hd + cis(headang)*perp
          to hd
-         to hd + cis(-25)*perp;
+         to hd + cis(-headang)*perp;
 }
