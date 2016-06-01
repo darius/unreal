@@ -34,8 +34,9 @@ atom:      '('_ number ','_ number ')'_        :complex :Literal
          | unaryfn '('_ expr ')'_                       :CallPrim
          | name :Ref ('.'_ name :Of)*.
 
-unaryfn:   'abs'__  :Abs
-         | 'cis'__  :Cis.
+unaryfn:   'abs'__   :Abs
+         | 'cis'__   :Cis
+         | 'unit'__  :Unit.
 
 number:    { '-'? (/\d*/ '.' /\d+/ | /\d+/) } _  :float.
 
@@ -48,5 +49,6 @@ comment  = '/*' (!'*/' /.|\n/)* '*/'.
 """)
 parser = grammar(Abs=push(solver.Abs),
                  Cis=push(solver.Cis),
+                 Unit=push(solver.Unit),
                  **interpreter.__dict__)
 parse = parser.program

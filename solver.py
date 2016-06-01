@@ -101,8 +101,13 @@ def cis(angle):
     assert zeroish(angle.imag)   # XXX complain some other way
     return cmath.exp(1j * math.radians(angle.real))
 
-def Abs(arg): return NonlinearFn(abs, arg)
-def Cis(arg): return NonlinearFn(cis, arg)
+def unit(value):
+    assert not zeroish(value)
+    return value / abs(value)
+
+def Abs(arg):  return NonlinearFn(abs, arg)
+def Cis(arg):  return NonlinearFn(cis, arg)
+def Unit(arg): return NonlinearFn(unit, arg)
 
 class Combo(Expr):
     def __init__(self, terms):
