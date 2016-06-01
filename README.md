@@ -2,7 +2,17 @@
 
 Christopher Van Wyk's IDEAL picture language redone in Python: or
 anyway, some subset thereof, as far as I get, for the sake of
-understanding it better.
+understanding it better. This currently doesn't do:
+
+  * drawing anything but line segments
+  * built-in functions besides arithmetic
+  * default constraints
+  * pens
+  * boundaries and set operations
+
+What it does do:
+
+  * solve so-called 'slightly nonlinear' constraints
 
 To run it: `python unreal.py sourcefile1 sourcefile2 ... >out.svg`
 
