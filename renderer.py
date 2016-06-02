@@ -22,8 +22,14 @@ def end():
 xscale =  100
 yscale = -100
 
-def xstr(x): return '%g' % round(x*xscale, 1)
-def ystr(y): return '%g' % round(y*yscale, 1)
+def coord_str(num):
+    s = '%g' % round(num, 1)
+    # Sometimes we get varying '-0' or '0' from run to run. Hide the
+    # variation:
+    return '0' if s == '-0' else s
+
+def xstr(x): return coord_str(x*xscale)
+def ystr(y): return coord_str(y*yscale)
 
 def polyline(points):
     print ('<polyline points="%s" fill="transparent" stroke="black" stroke-width="1"/>'
