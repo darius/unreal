@@ -27,7 +27,7 @@ def solve(equations):
             try:
                 combo = expr.evaluate()
             except Nonlinear:
-                pending.append(expr)
+                pending.append((defaulty, expr))
             else:
                 terms = combo.expand()
                 if varies(terms):
