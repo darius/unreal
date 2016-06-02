@@ -10,3 +10,4 @@ python unreal.py eg/library eg/pythagoras >ref/pythagoras.svg
 python unreal.py eg/library eg/pythagoras-squares >ref/pythagoras-squares.svg
 python unreal.py eg/forwardref >ref/forwardref.svg
 python unreal.py eg/library eg/list1 >ref/list1.svg
+python unreal.py eg/library eg/list2 >ref/list2.svg

@@ -1,0 +1,35 @@
+main {
+    var lht, lwd;
+    lht = 1;
+    lwd = 2;
+
+    put first: listnode {
+        sw = -2.5;
+    }
+    put last: listnode {
+        sw = 2[first.sw, first.se];
+        conn s to ne;
+    }
+    put new: listnode {
+        nw = 2[first.ne, first.se];
+    }
+
+    put arrow {
+        hd = new.nw;
+        tl = first.next;
+    }
+    put arrow {
+        hd = last.sw;
+        tl = new.next;
+    }
+    put arrow {
+        hd = new.w;
+        tl = hd - 1;
+        right "new " at tl;
+    }
+    put arrow {
+        hd = first.w;
+        tl = hd - 1;
+        right "list " at tl;
+    }
+}
