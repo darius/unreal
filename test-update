@@ -1,0 +1,12 @@
+#!/bin/sh
+# This uses out/ and ref/ directories which I didn't check in to the repo.
+
+python unreal.py eg/trivial >ref/trivial.svg
+python unreal.py eg/1 >ref/1.svg
+python unreal.py eg/2 >ref/2.svg
+python unreal.py eg/library eg/3 >ref/3.svg
+python unreal.py eg/library eg/4 >ref/4.svg
+python unreal.py eg/library eg/pythagoras >ref/pythagoras.svg
+python unreal.py eg/library eg/pythagoras-squares >ref/pythagoras-squares.svg
+python unreal.py eg/forwardref >ref/forwardref.svg
+python unreal.py eg/library eg/list1 >ref/list1.svg
