@@ -41,7 +41,7 @@ def solve(equations):
                     consistent_so_far = False
                     print 'Inconsistent', combo
         if pending == equations:
-            return False
+            return False # Made no progress on remaining equations; give up.
         equations = pending
     return consistent_so_far # N.B. might still be underconstrained
 
