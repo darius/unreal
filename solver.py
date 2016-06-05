@@ -32,10 +32,11 @@ def solve(equations):
                 terms = combo.expand()
                 if varies(terms):
                     eliminate_a_variable(terms)
-                elif zeroish(constant(terms)):
-                    pass # A consistent but useless equation: drop it.
-                elif defaulty:
-                    pass # It's OK to contradict a default.
+                elif defaulty or zeroish(constant(terms)):
+                    # The equation was either only a default (so we
+                    # don't care if it's inconsistent) or it reduced
+                    # to an uninformative 0=0: drop it.
+                    pass 
                 else:
                     consistent_so_far = False
                     print 'Inconsistent', combo
