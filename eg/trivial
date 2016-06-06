@@ -1,6 +1,8 @@
 triangle {
     var z1, z2, z3;
     conn z1 to z2 to z3 to z1;
+    "I am a triangle." at z3;
+    left "So there!" at z2;
 }
 main {
     put triangle {
