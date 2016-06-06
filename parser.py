@@ -2,8 +2,8 @@
 Parse (our subset of) IDEAL.
 """
 
-from parson import Grammar, push, Unparsable
-import interpreter, solver
+from parson import Grammar, Unparsable
+import interpreter
 
 grammar = Grammar(r"""
 program:   _ box* !/./.
