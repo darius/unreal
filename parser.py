@@ -6,7 +6,7 @@ from parson import Grammar, Unparsable
 import interpreter
 
 grammar = Grammar(r"""
-program:   _ box* !/./.
+program:   _ box* :end.
 
 box:       name '{'_ [stmt* :hug] '}'_                  :Box.
 
