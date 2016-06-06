@@ -130,6 +130,10 @@ class CallPrim(Struct('fn arg')):
     def evaluate(self, env):
         return self.fn(self.arg.evaluate(env))
 
+def Abs():  return solver.Abs
+def Cis():  return solver.Cis
+def Unit(): return solver.Unit
+
 class Relatively(Struct('coord zero one')):
     """Linear interpolate/extrapolate, i.e. `coord` in the coordinate
     system that places 0 at `zero` and 1 at `one`."""

@@ -47,8 +47,5 @@ name     = /([A-Za-z_][A-Za-z_0-9]*)/ _.
 _        = (/\s+/ | comment)*.
 comment  = '/*' (!'*/' /.|\n/)* '*/'.
 """)
-parser = grammar(Abs=push(solver.Abs),
-                 Cis=push(solver.Cis),
-                 Unit=push(solver.Unit),
-                 **interpreter.__dict__)
+parser = grammar.bind(interpreter)
 parse = parser.program
