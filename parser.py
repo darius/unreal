@@ -13,13 +13,13 @@ box:       name '{'_ [stmt* :hug] '}'_                  :Box.
 stmt:      'var'__ name (','_ name)* ';'_          :hug :Decl
          | 'conn'__ expr ('to'__ expr)+ ';'_       :hug :Conn
          | 'put'__ [name ':'_ | :None] box (';'_)?      :Put
-         | justified string 'at'__ expr ';'_            :Text
+         | justify string 'at'__ expr ';'_              :Text
          | expr ('='_ expr)+ ';'_                  :hug :Equate 
          | expr ('~'_ expr)+ ';'_                  :hug :Default.
 
-justified: {'left'|'right'|'center'}__ | :'center'.
+justify:   {'left'|'right'|'center'}__ | :'center'.
 
-__ = /\b/_.   # (i.e. a keyword must match up to a word boundary)
+__       = /\b/_.   # (i.e. a keyword must match up to a word boundary)
 
 expr:      term ( '+'_ term :Add
                 | '-'_ term :Sub )*.
