@@ -5,8 +5,7 @@ Parse (our subset of) IDEAL.
 from parson import Grammar, Unparsable
 import interpreter
 
-grammar = Grammar(r"""
-program:   _ box* :end.
+grammar = Grammar(r""" _ box* :end.
 
 box:       name '{'_ [stmt* :hug] '}'_                  :Box.
 
@@ -48,5 +47,4 @@ name     = /([A-Za-z_][A-Za-z_0-9]*)/ _.
 _        = (/\s+/ | comment)*.
 comment  = '/*' (!'*/' /.|\n/)* '*/'.
 """)
-parser = grammar.bind(interpreter)
-parse = parser.program
+parse = grammar.bind(interpreter)
