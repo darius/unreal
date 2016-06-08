@@ -18,7 +18,7 @@ stmt:      'var'__ name ++ (','_) ';'_             :hug :Decl
 
 justify:   {'left'|'right'|'center'}__ | :'center'.
 
-__       = /\b/_.   # (i.e. a keyword must match up to a word boundary)
+__:        /\b/_.   # (i.e. a keyword must match up to a word boundary)
 
 expr:      term ( '+'_ term :Add
                 | '-'_ term :Sub )*.
@@ -40,11 +40,11 @@ unaryfn:   'abs'__   :Abs
 
 number:    { '-'? (/\d*/ '.' /\d+/ | /\d+/) } _  :float.
 
-string   = '"' {/[^\\"]*/} '"' _.
+string:    '"' {/[^\\"]*/} '"' _.
 
-name     = /([A-Za-z_][A-Za-z_0-9]*)/ _.
+name:      /([A-Za-z_][A-Za-z_0-9]*)/ _.
 
-_        = (/\s+/ | comment)*.
-comment  = '/*' (!'*/' /.|\n/)* '*/'.
+_:         (/\s+/ | comment)*.
+comment:   '/*' (!'*/' /.|\n/)* '*/'.
 """)
 parse = grammar.bind(interpreter)
