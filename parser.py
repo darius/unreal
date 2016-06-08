@@ -9,7 +9,7 @@ grammar = Grammar(r""" _ box* :end.
 
 box:       name '{'_ [stmt* :hug] '}'_                  :Box.
 
-stmt:      'var'__ name (','_ name)* ';'_          :hug :Decl
+stmt:      'var'__ name ++ (','_) ';'_             :hug :Decl
          | 'conn'__ expr ('to'__ expr)+ ';'_       :hug :Conn
          | 'put'__ [name ':'_ | :None] box (';'_)?      :Put
          | justify string 'at'__ expr ';'_              :Text
