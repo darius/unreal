@@ -20,8 +20,8 @@ justify:   {'left'|'right'|'center'}__ | :'center'.
 
 __:        /\b/_.   # (i.e. a keyword must match up to a word boundary)
 
-expr:      term ( '+'_ term :Add
-                | '-'_ term :Sub )*.
+expr:      term   ( '+'_ term   :Add
+                  | '-'_ term   :Sub )*.
 term:      factor ( '*'_ factor :Mul
                   | '/'_ factor :Div )*.
 
