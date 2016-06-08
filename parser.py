@@ -5,46 +5,45 @@ Parse (our subset of) IDEAL.
 from parson import Grammar, Unparsable
 import interpreter
 
-grammar = Grammar(r""" _ box* :end.
+grammar = Grammar(r""" box* :end.
 
-box:       name '{'_ [stmt* :hug] '}'_                  :Box.
+box:       name '{' [stmt* :hug] '}'               :Box.
 
-stmt:      'var'__ name ++ (','_) ';'_             :hug :Decl
-         | 'conn'__ expr ('to'__ expr)+ ';'_       :hug :Conn
-         | 'put'__ [name ':'_ | :None] box (';'_)?      :Put
-         | justify string 'at'__ expr ';'_              :Text
-         | expr ('='_ expr)+ ';'_                  :hug :Equate 
-         | expr ('~'_ expr)+ ';'_                  :hug :Default.
+stmt:      "var" name ++ (',') ';'            :hug :Decl
+         | "conn" expr ("to" expr)+ ';'       :hug :Conn
+         | "put" [name ':' | :None] box (';')?     :Put
+         | justify string "at" expr ';'            :Text
+         | expr ('=' expr)+ ';'               :hug :Equate 
+         | expr ('~' expr)+ ';'               :hug :Default.
 
-justify:   {'left'|'right'|'center'}__ | :'center'.
+justify:   {"left"~|"right"~|"center"~} FNORD
+         | :'center'.
 
-__:        /\b/_.   # (i.e. a keyword must match up to a word boundary)
+expr:      term   ( '+' term   :Add
+                  | '-' term   :Sub )*.
+term:      factor ( '*' factor :Mul
+                  | '/' factor :Div )*.
 
-expr:      term   ( '+'_ term   :Add
-                  | '-'_ term   :Sub )*.
-term:      factor ( '*'_ factor :Mul
-                  | '/'_ factor :Div )*.
+factor:    atom ('[' expr ',' expr ']' :Relatively)*.
 
-factor:    atom ('['_ expr ','_ expr ']'_ :Relatively)*.
+atom:      '(' number ',' number ')'      :complex :Literal
+         | number                         :complex :Literal
+         | '-' atom                                :Negate
+         | '(' expr ')'
+         | unaryfn '(' expr ')'                    :CallPrim
+         | name :Ref ('.' name :Of)*.
 
-atom:      '('_ number ','_ number ')'_        :complex :Literal
-         | number                              :complex :Literal
-         | '-'_ atom                                    :Negate
-         | '('_ expr ')'_
-         | unaryfn '('_ expr ')'_                       :CallPrim
-         | name :Ref ('.'_ name :Of)*.
+unaryfn:   "abs"   :Abs
+         | "cis"   :Cis
+         | "unit"  :Unit.
 
-unaryfn:   'abs'__   :Abs
-         | 'cis'__   :Cis
-         | 'unit'__  :Unit.
+name:      /([A-Za-z_][A-Za-z_0-9]*)/.
 
-number:    { '-'? (/\d*/ '.' /\d+/ | /\d+/) } _  :float.
+number  ~: { '-'? (/\d*/ '.' /\d+/ | /\d+/) } FNORD   :float.
 
-string:    '"' {/[^\\"]*/} '"' _.
+string  ~: '"' {/[^\\"]*/} '"' FNORD.
 
-name:      /([A-Za-z_][A-Za-z_0-9]*)/ _.
-
-_:         (/\s+/ | comment)*.
-comment:   '/*' (!'*/' /.|\n/)* '*/'.
+FNORD   ~: (/\s+/ | comment)*.
+comment ~: '/*' (!'*/' /.|\n/)* '*/'.  # XXX anyone
 """)
 parse = grammar.bind(interpreter)
