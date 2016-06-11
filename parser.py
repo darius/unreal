@@ -44,6 +44,6 @@ number  ~: { '-'? (/\d*/ '.' /\d+/ | /\d+/) } FNORD   :float.
 string  ~: '"' {/[^\\"]*/} '"' FNORD.
 
 FNORD   ~: (/\s+/ | comment)*.
-comment ~: '/*' (!'*/' /.|\n/)* '*/'.  # XXX anyone
+comment ~: '/*' (!'*/' :anyone)* '*/'.
 """)
 parse = grammar.bind(interpreter)
