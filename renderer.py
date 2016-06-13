@@ -36,10 +36,9 @@ def polyline(points):
            % ', '.join('%s %s' % (xstr(x), ystr(y)) for x,y in points))
 
 def text(string, justified, at):
-    anchor = anchorings[justified]
     x, y = at
     print ('<text text-anchor="%s" x="%s" y="%s">%s</text>'
-           % (anchor, xstr(x), ystr(y), xml_escape(string)))
+           % (anchorings[justified], xstr(x), ystr(y), xml_escape(string)))
 
 anchorings = {
     'left':   'start',
