@@ -31,10 +31,6 @@ def coord_str(num):
 def xstr(x): return coord_str(x*xscale)
 def ystr(y): return coord_str(y*yscale)
 
-def polyline(points):
-    print ('<polyline points="%s" fill="transparent" stroke="black" stroke-width="1"/>'
-           % ', '.join('%s %s' % (xstr(x), ystr(y)) for x,y in points))
-
 def text(string, justified, at):
     x, y = at
     print ('<text text-anchor="%s" x="%s" y="%s">%s</text>'
@@ -45,6 +41,22 @@ anchorings = {
     'center': 'middle',
     'right':  'end',
 }
+
+def polyline(points):
+    print ('<polyline points="%s" fill="transparent" stroke="black" stroke-width="1"/>'
+           % ', '.join('%s %s' % (xstr(x), ystr(y)) for x,y in points))
+
+def spline(points):
+    if len(points) < 3:
+        return polyline(points)
+    path = 'M%s %s' % (xstr(points[0][0]), ystr(points[0][1]))
+    for i, (xi,yi) in enumerate(points[1:-1], 1):
+        xj, yj = points[i+1]
+        if i+2 < len(points):
+            xj, yj = (xi+xj)/2, (yi+yj)/2
+        path += ' Q %s %s, %s %s' % (xstr(xi), ystr(yi), xstr(xj), ystr(yj))
+    print ('<path d="%s" fill="transparent" stroke="black" stroke-width="1"/>'
+           % path)
 
 def xml_escape(string):
     t = dom.Text()

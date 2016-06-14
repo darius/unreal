@@ -10,7 +10,8 @@ grammar = Grammar(r""" box* :end.
 box:       name '{' [stmt* :hug] '}'               :Box.
 
 stmt:      "var" name ++ ',' ';'              :hug :Decl
-         | "conn" expr ("to" expr)+ ';'       :hug :Conn
+         | "conn"   expr ("to" expr)+ ';'     :hug :Conn
+         | "spline" expr ("to" expr)+ ';'     :hug :Spline
          | "put" [name ':' | :None] box ';'?       :Put
          | justify string "at" expr ';'            :Text
          | expr ('=' expr)+ ';'               :hug :Equate 

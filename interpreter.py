@@ -62,6 +62,14 @@ class Conn(Struct('points')):
         points = [p.evaluate(env).get_value() for p in self.points]
         renderer.polyline(map(to_coords, points))
 
+class Spline(Struct('points')):
+    # TODO: factor Conn and Spline together
+    def build(self, env):
+        env.add_drawer(self)
+    def draw(self, env):
+        points = [p.evaluate(env).get_value() for p in self.points]
+        renderer.spline(map(to_coords, points))
+
 class Text(Struct('justified string where')):
     def build(self, env):
         env.add_drawer(self)
