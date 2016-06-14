@@ -51,6 +51,9 @@ def spline(points):
         return polyline(points)
     path = 'M%s %s' % (xstr(points[0][0]), ystr(points[0][1]))
     for i, (xi,yi) in enumerate(points[1:-1], 1):
+        # I think this is what the manual means by "a smooth curve
+        # that is tangent to the polygonal path they define at the
+        # midpoint of each segment".
         xj, yj = points[i+1]
         if i+2 < len(points):
             xj, yj = (xi+xj)/2, (yi+yj)/2
