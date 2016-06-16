@@ -17,7 +17,7 @@ stmt:      "var" name ++ ',' ';'              :hug :Decl
          | expr ('=' expr)+ ';'               :hug :Equate 
          | expr ('~' expr)+ ';'               :hug :Default.
 
-justify:   {"left"~|"right"~|"center"~} FNORD
+justify ~: {"left"|"right"|"center"} FNORD
          | :'center'.
 
 expr:      term   ( '+' term   :Add
