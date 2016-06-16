@@ -49,6 +49,8 @@ class Box(Struct('name stmts')):
     def make(self, env):
         for stmt in self.stmts:
             stmt.build(env)
+    def prepend(self, stmts):
+        return Box(self.name, stmts + self.stmts)
 
 class Decl(Struct('names')):
     def build(self, env):
@@ -69,6 +71,34 @@ class Spline(Struct('points')):
     def draw(self, env):
         points = [p.evaluate(env).get_value() for p in self.points]
         renderer.spline(map(to_coords, points))
+
+class Pen(Struct('points count box start end')):
+    # XXX maybe make this (except for `points`) all an optional field in Conn
+    def build(self, env):
+        # XXX Should we require len(points) to be 2?
+        #     Or work over each pair of successive points?
+        #     It looks like real IDEAL requires at least 2 but ignores any left over.
+        assert len(self.points) == 2, "'conn using' must connect exactly two points"
+        zero, one = self.points
+
+        # XXX The true semantics is problematic for us in requiring
+        #  count to be evaluated to a number before we can instantiate
+        #  the boxes -- so far we've never interleaved creating
+        #  objects with solving constraints. I think we could do this
+        #  without a massive overhaul, but I'm not gonna try
+        #  tonight. Instead, require `count` to be a literal.
+        assert isinstance(self.count, Literal), "XXX crude implementation restriction"
+        assert self.count.value.imag == 0
+        n = self.count.value.real
+        assert n == int(n)
+        n = int(n)
+        n_exp = Literal(self.count.value)
+        ps = [Relatively(Div(Literal(i), n_exp), zero, one)
+              for i in range(n + 1)]
+        for a_exp, b_exp in zip(ps[:-1], ps[1:]):
+            segment = Put(None, self.box.prepend((Equate((self.start, a_exp)),
+                                                  Equate((self.end, b_exp)))))
+            segment.build(env)
 
 class Text(Struct('justified string where')):
     def build(self, env):
