@@ -3,7 +3,7 @@ wavy {
     perp = (0,1)*unit(start - end);
     pt1 = 0.25[start,end] + perp*ht;
     pt2 = 0.75[start,end] - perp*ht;
-    conn start to pt1 to pt2 to end;
+    spline start to pt1 to pt2 to end;
 }
 
 brush {
