@@ -4,7 +4,7 @@ Christopher Van Wyk's IDEAL picture language redone in Python: or
 anyway, some subset thereof, as far as I get, for the sake of
 understanding it better. This currently doesn't do:
 
-  * circles/arcs
+  * arcs
   * re, im, conj functions
   * boundaries and set operations
 
@@ -13,7 +13,7 @@ What it does do:
   * solve so-called 'slightly nonlinear' constraints
   * default constraints (like `a ~ b`)
   * other built-in functions
-  * splines
+  * lines, splines, circles
   * pens (for a constant number of segments)
 
 To run it: `python unreal.py sourcefile1 sourcefile2 ... >out.svg`

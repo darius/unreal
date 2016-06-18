@@ -10,11 +10,12 @@ grammar = Grammar(r""" box* :end.
 box:       name '{' [stmt* :hug] '}'               :Box.
 
 stmt:      "var" name ++ ',' ';'              :hug :Decl
+         | "put" [name ':' | :None] box ';'?       :Put
          | "conn" expr ("to" expr)+ :hug
              ("using" expr box '<' expr ',' expr '>' ';' :Pen
              |                                       ';' :Conn)
          | "spline" expr ("to" expr)+ ';'     :hug :Spline
-         | "put" [name ':' | :None] box ';'?       :Put
+         | "compass" expr "to" expr ';'            :Compass
          | justify string "at" expr ';'            :Text
          | expr ('=' expr)+ ';'               :hug :Equate 
          | expr ('~' expr)+ ';'               :hug :Default.

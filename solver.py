@@ -97,7 +97,8 @@ class NonlinearFn(Struct('fn arg', supertype=(Expr,))):
         if varies(terms):
             raise Nonlinear()
         value = constant(terms)
-        assert isinstance(value, (int, float, complex)), 'type: %s, value: %r' % (type(value), value)
+        assert isinstance(value, (int, float, complex)), \
+            'type: %s, value: %r' % (type(value), value)
         return make_constant(self.fn(value))
 
 def cis(angle):

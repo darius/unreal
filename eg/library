@@ -7,6 +7,12 @@ rect {
     conn ne to nw to sw to se to ne;
 }
 
+circle {
+    var radius, center,	z1; /* XXX also z2 and z3 */
+    center + radius = z1;
+    compass center to z1;
+}
+
 listnode {  /* XXX why not inherit from rect, plus a line down the middle? */
     var n, s, e, w, ne, nw, se, sw, next;
     n = s + (0,1)*lht;   /* N.B. lht, lwd are free */

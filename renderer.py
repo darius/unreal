@@ -2,6 +2,7 @@
 Output SVG.
 """
 
+import math
 import xml.dom.minidom as dom
 
 # (I tried using SVG transforms to work within the source coordinate
@@ -60,6 +61,13 @@ def spline(points):
         path += ' Q %s %s, %s %s' % (xstr(xi), ystr(yi), xstr(xj), ystr(yj))
     print ('<path d="%s" fill="transparent" stroke="black" stroke-width="1"/>'
            % path)
+
+def circle(center, boundary):
+    cx, cy = center
+    bx, by = boundary
+    radius = math.hypot(xscale * (bx - cx), yscale * (by - cy))
+    print ('<circle cx="%s" cy="%s" r="%s" fill="transparent" stroke="black" stroke-width="1"/>'
+           % (xstr(cx), ystr(cy), coord_str(radius)))
 
 def xml_escape(string):
     t = dom.Text()
