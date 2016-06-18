@@ -11,5 +11,6 @@ python unreal.py eg/library eg/pythagoras-squares >ref/pythagoras-squares.svg
 python unreal.py eg/forwardref >ref/forwardref.svg
 python unreal.py eg/library eg/list1 >ref/list1.svg
 python unreal.py eg/library eg/list2 >ref/list2.svg
+python unreal.py eg/wavy >ref/wavy.svg
 python unreal.py eg/regular-n-gon >ref/regular-n-gon.svg
 python unreal.py eg/library eg/concentrics >ref/concentrics.svg
