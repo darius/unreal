@@ -1,0 +1,6 @@
+main {
+    conn 1 to 6 using 5 circle {
+        var ignore;
+        center = 0;
+    } <radius*2, ignore>;
+}
