@@ -12,4 +12,5 @@ python unreal.py eg/forwardref >out/forwardref.svg && diff -u ref/forwardref.svg
 python unreal.py eg/library eg/list1 >out/list1.svg && diff -u ref/list1.svg out/list1.svg &&
 python unreal.py eg/library eg/list2 >out/list2.svg && diff -u ref/list2.svg out/list2.svg &&
 python unreal.py eg/wavy >out/wavy.svg && diff -u ref/wavy.svg out/wavy.svg &&
-python unreal.py eg/regular-n-gon >out/regular-n-gon.svg && diff -u ref/regular-n-gon.svg out
+python unreal.py eg/regular-n-gon >out/regular-n-gon.svg && diff -u ref/regular-n-gon.svg out &&
+python unreal.py eg/library eg/concentrics >out/concentrics.svg && diff -u ref/concentrics.svg out
