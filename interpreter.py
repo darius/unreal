@@ -92,8 +92,7 @@ class Pen(Struct('points count box start end')):
         n = self.count.value.real
         assert n == int(n)
         n = int(n)
-        n_exp = Literal(self.count.value)
-        ps = [Relatively(Div(Literal(i), n_exp), zero, one)
+        ps = [Relatively(Div(Literal(i), self.count), zero, one)
               for i in range(n + 1)]
         for a_exp, b_exp in zip(ps[:-1], ps[1:]):
             segment = Put(None, self.box.prepend((Equate((self.start, a_exp)),

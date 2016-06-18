@@ -97,7 +97,7 @@ class NonlinearFn(Struct('fn arg', supertype=(Expr,))):
         if varies(terms):
             raise Nonlinear()
         value = constant(terms)
-        assert isinstance(value, complex), repr(value)
+        assert isinstance(value, (int, float, complex)), 'type: %s, value: %r' % (type(value), value)
         return make_constant(self.fn(value))
 
 def cis(angle):
@@ -132,6 +132,8 @@ class Combo(Expr):
     def add_into(self, accum, c):
         for v, coeff in self.terms.iteritems():
             v.add_into(accum, c * coeff)
+    def __repr__(self):
+        return '(%r)' % self.terms
 
 def varies(terms):
     return any(v is not const_term for v in terms)
