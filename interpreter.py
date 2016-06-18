@@ -99,11 +99,12 @@ class Pen(Struct('points count box start end')):
                                                   Equate((self.end, b_exp)))))
             segment.build(env)
 
-class Compass(Struct('center boundary')):
+class Compass(Struct('center boundary_point')):
     def build(self, env):
         env.add_drawer(self)
     def draw(self, env):
-        points = [p.evaluate(env).get_value() for p in (self.center, self.boundary)]
+        points = [p.evaluate(env).get_value() for p in (self.center,
+                                                        self.boundary_point)]
         renderer.circle(*map(to_coords, points))
 
 class Text(Struct('justified string where')):

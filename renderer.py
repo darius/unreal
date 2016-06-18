@@ -62,9 +62,9 @@ def spline(points):
     print ('<path d="%s" fill="transparent" stroke="black" stroke-width="1"/>'
            % path)
 
-def circle(center, boundary):
+def circle(center, boundary_point):
     cx, cy = center
-    bx, by = boundary
+    bx, by = boundary_point
     radius = math.hypot(xscale * (bx - cx), yscale * (by - cy))
     print ('<circle cx="%s" cy="%s" r="%s" fill="transparent" stroke="black" stroke-width="1"/>'
            % (xstr(cx), ystr(cy), coord_str(radius)))
