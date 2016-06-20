@@ -1,0 +1,10 @@
+#!/bin/bash
+set -euo pipefail; shopt -s failglob  # 'Bash strict mode'
+
+# Run unreal and check that it succeeds and produces the expected output.
+# The arguments are expected in a funny format for convenience to me as an
+# incompetent shell-scripter.
+
+name=$1; shift
+python unreal.py "$@" eg/$name >out/$name.svg
+diff -u ref/$name.svg out/
