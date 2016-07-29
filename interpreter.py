@@ -57,20 +57,15 @@ class Decl(Struct('names')):
         for name in self.names:
             define(env.frames[-1], name, solver.make_variable(env.prefix + name))
 
-class Conn(Struct('points')):
+class Path(Struct('points')):
     def build(self, env):
         env.add_drawer(self)
     def draw(self, env):
         points = [p.evaluate(env).get_value() for p in self.points]
-        renderer.polyline(map(to_coords, points))
+        self.render(map(to_coords, points))
 
-class Spline(Struct('points')):
-    # TODO: factor Conn and Spline together
-    def build(self, env):
-        env.add_drawer(self)
-    def draw(self, env):
-        points = [p.evaluate(env).get_value() for p in self.points]
-        renderer.spline(map(to_coords, points))
+class Conn(Path):   render = staticmethod(renderer.polyline)
+class Spline(Path): render = staticmethod(renderer.spline)
 
 class Pen(Struct('points count box start end')):
     # XXX maybe make this (except for `points`) all an optional field in Conn
